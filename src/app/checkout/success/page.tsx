@@ -2,9 +2,10 @@
 
 import { useEffect, useMemo, useState } from "react"
 import { useSearchParams } from "next/navigation"
+import Image from "next/image"
 import { products } from "@/app/boutique/data"
 
-type TrackId = "t1-fr" | "t2-fr" | "t1-en" | "t2-en"
+type TrackId = "t1-fr" | "t2-fr" // anglais retiré si plus utilisé
 
 function gcalUrl(p:{title:string;start:string;end:string;details?:string;location?:string;ctz?:string;recur?:string}) {
   const q = new URLSearchParams()
@@ -19,8 +20,12 @@ function gcalUrl(p:{title:string;start:string;end:string;details?:string;locatio
 const TRACK_GCAL: Record<TrackId,{title:string;start:string;end:string}> = {
   "t1-fr": { title: "Groupe Thème 1 — FR", start: "20260107T170000", end: "20260107T183000" },
   "t2-fr": { title: "Groupe Thème 2 — FR", start: "20260114T170000", end: "20260114T183000" },
-  "t1-en": { title: "Group Theme 1 — ENG", start: "20260110T190000", end: "20260110T203000" },
-  "t2-en": { title: "Group Theme 2 — ENG", start: "20260117T190000", end: "20260117T203000" },
+}
+
+type DiscountProduct = {
+  slug: string
+  title: string
+  image?: string
 }
 
 export default function SuccessPage() {
@@ -35,10 +40,9 @@ export default function SuccessPage() {
     ;(async () => {
       const r = await fetch(`/api/checkout/success?id=${encodeURIComponent(sid)}`, { cache: "no-store" })
       if (!r.ok) return
-      const data = await r.json()
+      const data: { track?: TrackId; email?: string } = await r.json()
       setTrack(data.track ?? null)
       setEmail(data.email ?? null)
-      // fallback email si le webhook n’a pas tourné
       if (data.email && data.track) {
         try {
           setSending(true)
@@ -72,14 +76,19 @@ export default function SuccessPage() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ slug }),
     })
-    const { url } = await r.json()
+    const { url }: { url?: string } = await r.json()
     if (url) window.location.href = url
   }
 
-  const discounted = useMemo(() => {
-    const list = products.slice()
-    const hasPack = list.some(p => p.slug === "pack-integral")
-    if (!hasPack) list.unshift({ slug: "pack-integral", title: "Pack intégral", image: undefined } as any)
+  const discounted: DiscountProduct[] = useMemo(() => {
+    const list: DiscountProduct[] = products.map(p => ({
+      slug: p.slug,
+      title: p.title,
+      image: p.image,
+    }))
+    if (!list.some(p => p.slug === "pack-integral")) {
+      list.unshift({ slug: "pack-integral", title: "Pack intégral" })
+    }
     return list
   }, [])
 
@@ -90,6 +99,7 @@ export default function SuccessPage() {
       {track && (
         <div className="mt-6 space-y-3">
           <p className="opacity-80">Inscription confirmée pour <strong>{track}</strong>.</p>
+          {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
           <a
             href={gcal}
             target="_blank"
@@ -113,7 +123,15 @@ export default function SuccessPage() {
             const oldPrice = isPack ? 49 : 9
             return (
               <article key={p.slug} className="border rounded-lg overflow-hidden">
-                {p.image && <img src={p.image} alt={p.title} className="w-full h-40 object-cover" />}
+                {p.image && (
+                  <Image
+                    src={p.image}
+                    alt={p.title}
+                    width={400}
+                    height={200}
+                    className="w-full h-40 object-cover"
+                  />
+                )}
                 <div className="p-4">
                   <h3 className="font-medium">{p.title}</h3>
                   <p className="mt-1 text-sm">
@@ -127,6 +145,7 @@ export default function SuccessPage() {
                     >
                       Acheter à {newPrice} €
                     </button>
+                    {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
                     <a
                       href={`/boutique/${p.slug}`}
                       className="px-3 py-2 rounded border text-sm hover:border-accent hover:text-accent transition"

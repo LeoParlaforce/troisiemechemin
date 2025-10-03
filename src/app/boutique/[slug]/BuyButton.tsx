@@ -6,7 +6,11 @@ function svgCursor(emoji: string) {
   return `url("data:image/svg+xml;utf8,${encodeURIComponent(svg)}") 0 0, auto`
 }
 
-export default function BuyButton({ slug, title }: { slug: string; title: string }) {
+export default function BuyButton({
+  slug,
+  title,
+  image,
+}: { slug: string; title: string; image: string }) {
   const [loading, setLoading] = useState(false)
   const [hover, setHover] = useState(false)
 
@@ -20,10 +24,10 @@ export default function BuyButton({ slug, title }: { slug: string; title: string
       const m = await fetch("/api/checkout/ebook-member", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ slug }),
+        body: JSON.stringify({ slug, image }),
       })
       if (m.ok) {
-        const { url } = await m.json()
+        const { url } = await m.json() as { url?: string }
         if (url) { window.location.href = url; return }
       }
 
@@ -31,9 +35,9 @@ export default function BuyButton({ slug, title }: { slug: string; title: string
       const r = await fetch("/api/checkout/ebook", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ slug }),
+        body: JSON.stringify({ slug, image }),
       })
-      const { url } = await r.json()
+      const { url } = await r.json() as { url?: string }
       if (r.ok && url) { window.location.href = url; return }
 
       alert("Achat indisponible pour le moment.")

@@ -4,7 +4,7 @@ import Stripe from "stripe"
 export const runtime = "nodejs"
 export const dynamic = "force-dynamic"
 
-type TrackId = "t1-fr" | "t2-fr" | "t1-en" | "t2-en"
+type TrackId = "t1-fr" | "t2-fr"
 type Av = { count: number; spotsLeft: number; full: boolean }
 
 const CAPACITY = 10
@@ -16,13 +16,12 @@ function required(name: string): string {
   return v
 }
 
-const TRACKS: TrackId[] = ["t1-fr", "t2-fr", "t1-en", "t2-en"]
+const TRACKS: TrackId[] = ["t1-fr", "t2-fr"]
 const OCCUPY = new Set<Stripe.Subscription.Status>([
   "active", "trialing", "past_due", "unpaid",
 ])
 
 async function countByTrack(track: TrackId): Promise<number> {
-  // Utilise Stripe Search API sur metadata.track
   const q = `metadata['track']:'${track}' AND status:'active'`
   const it = await stripe.subscriptions.search({ query: q, limit: 100 })
   let total = it.data.length
@@ -39,26 +38,21 @@ export async function GET() {
   const base: Record<TrackId, Av> = {
     "t1-fr": { count: 0, spotsLeft: CAPACITY, full: false },
     "t2-fr": { count: 0, spotsLeft: CAPACITY, full: false },
-    "t1-en": { count: 0, spotsLeft: CAPACITY, full: false },
-    "t2-en": { count: 0, spotsLeft: CAPACITY, full: false },
   }
 
-  // Si la Search API n'est pas activée, fallback en list()
   async function safeCount(track: TrackId) {
     try {
       return await countByTrack(track)
     } catch {
-      // fallback: list all and filter (plus lent, OK pour <= quelques centaines)
       const subIds = new Set<string>()
       let starting_after: string | undefined
       while (true) {
-        const page = await stripe.subscriptions.list({
-          limit: 100,
-          starting_after,
-        })
+        const page = await stripe.subscriptions.list({ limit: 100, starting_after })
         for (const s of page.data) {
           if (!OCCUPY.has(s.status) || s.cancel_at_period_end) continue
-          if ((s.metadata as any)?.track === track) subIds.add(s.id)
+          if ((s.metadata?.track as string | undefined) === track) {
+            subIds.add(s.id)
+          }
         }
         if (!page.has_more) break
         starting_after = page.data[page.data.length - 1]?.id

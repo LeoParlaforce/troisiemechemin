@@ -16,7 +16,6 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
   const p = getProductBySlug(params.slug)
   if (!p) return notFound()
   const anchorFR = p.group === "t1" ? "#t1-fr" : "#t2-fr"
-  const anchorEN = p.group === "t1" ? "#t1-en" : "#t2-en"
 
   return (
     <main className="min-h-screen text-foreground">
@@ -25,7 +24,11 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
           <Image src={p.image} alt={p.title} fill className="object-cover" priority />
         </div>
         <div>
-          <a href="/boutique" className="text-sm opacity-80 hover:text-accent cursor-pointer">← Retour à la Boutique</a>
+          {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+          <a href="/boutique" className="text-sm opacity-80 hover:text-accent cursor-pointer">
+            ← Retour à la Boutique
+          </a>
+
           <h1 className="mt-3 text-4xl font-bold">{p.title}</h1>
           <p className="mt-2 text-lg opacity-80">{p.price}</p>
 
@@ -38,15 +41,18 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
 
           <div className="mt-8 flex flex-wrap gap-3">
             <BuyButton slug={p.slug} title={p.title} image={p.image} />
-            <a href={`/therapies-groupe${anchorFR}`} className="rounded-md border px-6 py-3 text-base transition hover:border-accent hover:text-accent cursor-pointer">
+            {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+            <a
+              href={`/therapies-groupe${anchorFR}`}
+              className="rounded-md border px-6 py-3 text-base transition hover:border-accent hover:text-accent cursor-pointer"
+            >
               Rejoindre le groupe (FR)
-            </a>
-            <a href={`/therapies-groupe${anchorEN}`} className="rounded-md border px-6 py-3 text-base transition hover:border-accent hover:text-accent cursor-pointer">
-              Join the group (ENG)
             </a>
           </div>
 
-          <p className="mt-6 text-sm opacity-70">Format PDF. Lecture ordinateur et mobile. Mises à jour incluses.</p>
+          <p className="mt-6 text-sm opacity-70">
+            Format PDF. Lecture ordinateur et mobile. Mises à jour incluses.
+          </p>
         </div>
       </section>
     </main>

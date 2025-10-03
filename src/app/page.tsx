@@ -1,103 +1,121 @@
-import Image from "next/image";
+import Link from "next/link"
+import Image from "next/image"
 
 export default function Home() {
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <main className="min-h-screen text-foreground">
+      {/* Hero */}
+      <section>
+        <div className="mx-auto max-w-6xl px-6 py-20 grid gap-12 md:grid-cols-2 md:items-center">
+          <div>
+            <h1 className="text-5xl md:text-6xl font-bold leading-tight tracking-tight">
+              Psychologie : incarner la vie, découvrez votre monde
+            </h1>
+            <p className="mt-5 text-xl/8 opacity-80">
+              Accompagnement psychologique et guides pratiques. E-books et groupe de paroles par visio en ligne.
+            </p>
+            <div className="mt-10 flex flex-wrap gap-4">
+              <Link
+                href="/boutique"
+                className="rounded-md bg-accent px-6 py-3 text-white text-base font-medium
+                           transition transform-gpu hover:-translate-y-1 hover:scale-[1.02] hover:shadow-lg
+                           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+              >
+                Découvrir les guides
+              </Link>
+              <Link
+                href="/therapies-groupe"
+                className="rounded-md border px-6 py-3 text-base font-medium
+                           transition transform-gpu hover:-translate-y-1 hover:border-accent hover:text-accent hover:shadow-md
+                           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+              >
+                Groupes de parole thématiques en visio
+              </Link>
+            </div>
+          </div>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+          {/* Hero 3:2 avec cadrage ajustable */}
+          <div className="relative aspect-[3/2] w-full overflow-hidden rounded-xl border">
             <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
+              src="/hero.jpg"
+              alt="Troisième Chemin — regard sans haine"
+              fill
+              className="object-cover object-[50%_20%] transition transform-gpu hover:scale-[1.03]"
+              priority
+              sizes="(min-width:768px) 50vw, 100vw"
             />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+      </section>
+
+      {/* 3 points clés */}
+      <section className="mx-auto max-w-6xl px-6 py-16">
+        <h2 className="text-3xl font-semibold">Ce que tu trouveras ici</h2>
+
+        <div className="mt-8 grid gap-6 md:grid-cols-3">
+          {/* Carte 1 — Guides (image) */}
+          <Link
+            href="/boutique"
+            aria-label="Voir les guides complets"
+            className="group block rounded-xl border overflow-hidden transition
+                       hover:-translate-y-1 hover:shadow-xl hover:border-accent transform-gpu"
+          >
+            <div className="relative aspect-[3/2]">
+              <Image
+                src="/guide.jpg"
+                alt="Guides complets"
+                fill
+                className="object-cover transition transform-gpu group-hover:scale-[1.03]"
+              />
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition" />
+            </div>
+            <div className="p-6">
+              <h3 className="text-lg font-semibold transition group-hover:text-accent">
+                Guides complets
+              </h3>
+              <p className="mt-2 text-base opacity-80">
+                E-book sous format PDF : Estime de soi, Dépression, Anxiété, Relations amoureuses, Solitude,
+                Troubles du sommeil, Troubles du spectre autistique, Troubles du comportement alimentaire, TDAH,
+                Procrastination et créativité, Hauts potentiels.
+              </p>
+            </div>
+          </Link>
+
+          {/* Carte 2 — Groupes (image) */}
+          <Link
+            href="/therapies-groupe"
+            aria-label="Voir les groupes de parole"
+            className="group block rounded-xl border overflow-hidden transition
+                       hover:-translate-y-1 hover:shadow-xl hover:border-accent transform-gpu"
+          >
+            <div className="relative aspect-[3/2]">
+              <Image
+                src="/group.jpg"
+                alt="Groupes de parole"
+                fill
+                className="object-cover transition transform-gpu group-hover:scale-[1.03]"
+              />
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition" />
+            </div>
+            <div className="p-6">
+              <h3 className="text-lg font-semibold transition group-hover:text-accent">
+                Groupes de parole
+              </h3>
+              <p className="mt-2 text-base opacity-80">
+                Séances thématiques bimensuelles en visio animées par un psychologue expert.
+              </p>
+            </div>
+          </Link>
+
+          {/* Carte 3 — non clickable */}
+          <article className="rounded-xl border p-6 transition hover:shadow-md hover:border-accent/50">
+            <h3 className="text-lg font-semibold">Approche humaniste</h3>
+            <p className="mt-2 text-base opacity-80">
+              Nous travaillons sans jugement, avec logique et sentiment. Devenez vous-même le soigneur de votre monde.
+            </p>
+          </article>
+        </div>
+      </section>
+    </main>
+  )
 }

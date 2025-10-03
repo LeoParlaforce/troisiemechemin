@@ -1,26 +1,63 @@
 @import "tailwindcss";
 
+/* Palette */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #e7e9f0;   /* gris marbre un peu plus sombre */
+  --foreground: #0f1115;
+  --accent:     #7c3aed;
+  --header-bg:  #f1eff6;
+  --muted:      #e3e0ec;
+
+  /* Marbrure plus marquée */
+  --marble-vein: rgba(64,72,88,0.14);
+  --marble-vein2: rgba(64,72,88,0.08);
+  --marble-highlight-1: rgba(255,255,255,0.45);
+  --marble-highlight-2: rgba(255,255,255,0.35);
 }
 
+/* Thème Tailwind v4 inline */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-accent:     var(--accent);
+  --color-header:     var(--header-bg);
+  --color-muted:      var(--muted);
+
+  --font-serif: var(--font-garamond);
 }
 
+/* Mode sombre */
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #0b0b0e;
+    --foreground: #f3f3f3;
+    --accent:     #8b5cf6;
+    --header-bg:  #14141a;
+    --muted:      #232432;
+
+    --marble-vein: rgba(190,198,214,0.16);
+    --marble-vein2: rgba(190,198,214,0.10);
+    --marble-highlight-1: rgba(255,255,255,0.06);
+    --marble-highlight-2: rgba(255,255,255,0.04);
   }
 }
 
+html { font-size: 18px; }
+
 body {
-  background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-garamond), serif;
+
+  /* Fond marbre gris renforcé */
+  background-color: var(--background);
+  background-image:
+    radial-gradient(1200px 800px at 20% 0%, var(--marble-highlight-1), transparent 60%),
+    radial-gradient(1000px 700px at 80% 10%, var(--marble-highlight-2), transparent 65%),
+    conic-gradient(from 25deg at 30% 60%, var(--marble-vein2), transparent 40%),
+    conic-gradient(from -20deg at 70% 40%, var(--marble-vein2), transparent 45%),
+    repeating-linear-gradient(24deg,
+      transparent 0 16px,
+      var(--marble-vein) 16px 17px,
+      transparent 17px 34px);
+  background-attachment: fixed;
 }

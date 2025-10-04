@@ -1,51 +1,57 @@
-import Stripe from "stripe"
 import { NextResponse } from "next/server"
+import Stripe from "stripe"
 
-type TrackId = "t1-fr" | "t2-fr"
+export const runtime = "nodejs"
+export const dynamic = "force-dynamic"
 
-const must = (k: string) => {
-  const v = process.env[k]
-  if (!v) throw new Error(`Missing ${k}`)
+function mustGet(name: string): string {
+  const v = process.env[name]
+  if (!v) throw new Error(`Missing ${name}`)
   return v
 }
+const stripe = new Stripe(mustGet("STRIPE_SECRET_KEY"))
 
-const stripe = new Stripe(must("STRIPE_SECRET_KEY"))
+export async function GET(req: Request) {
+  const url = new URL(req.url)
+  const id = url.searchParams.get("id") || url.searchParams.get("session_id")
+  if (!id) return NextResponse.json({ error: "missing_session_id" }, { status: 400 })
 
-type Body = { track?: TrackId }
+  const s = await stripe.checkout.sessions.retrieve(id, {
+    expand: ["subscription", "customer", "line_items"],
+  })
 
-export async function POST(req: Request) {
-  try {
-    const { track } = (await req.json()) as Body
-    if (track !== "t1-fr" && track !== "t2-fr") {
-      return NextResponse.json({ error: "bad_track" }, { status: 400 })
-    }
+  const track =
+    (s.metadata?.track as string | undefined) ||
+    s.client_reference_id ||
+    null
 
-    const origin = process.env.NEXT_PUBLIC_SITE_URL || new URL(req.url).origin
-    const unit_amount = Number(process.env.GROUP_PRICE_EUR_CENTS ?? "2400")
+  const email = s.customer_details?.email || null
 
-    const session = await stripe.checkout.sessions.create({
-      mode: "subscription",
-      locale: "fr",
-      line_items: [
-        {
-          price_data: {
-            currency: "eur",
-            unit_amount,
-            recurring: { interval: "week" as const, interval_count: 2 },
-            product_data: { name: track === "t1-fr" ? "Groupe FR — Thème 1" : "Groupe FR — Thème 2", metadata: { track } },
-          },
-          quantity: 1,
-        },
-      ],
-      subscription_data: { metadata: { track } },
-      success_url: `${origin}/abonnement/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${origin}/therapies-groupe#creneaux`,
-      allow_promotion_codes: true,
+  const li = s.line_items?.data?.[0]
+  const slug =
+    (li?.description
+      ? li.description.toLowerCase().replace(/\s+/g, "-")
+      : null) || null
+
+  const res = NextResponse.json({ track, email, slug }, { status: 200 })
+
+  const isMember = track === "t1-fr" || track === "t2-fr"
+  const customerId =
+    typeof s.customer === "string"
+      ? s.customer
+      : s.customer
+      ? (s.customer as Stripe.Customer).id
+      : null
+
+  if (customerId && isMember) {
+    res.cookies.set("member_cid", customerId, {
+      httpOnly: true,
+      sameSite: "lax",
+      secure: process.env.NODE_ENV !== "development",
+      maxAge: 60 * 60 * 24 * 30,
+      path: "/",
     })
-
-    return NextResponse.json({ url: session.url })
-  } catch (e: unknown) {
-    const msg = e instanceof Error ? e.message : "stripe_error"
-    return NextResponse.json({ error: msg }, { status: 500 })
   }
+
+  return res
 }

@@ -25,27 +25,39 @@ export async function GET(req: Request) {
     const url = new URL(req.url)
     const sessionId = url.searchParams.get("session_id") || ""
     const slug = url.searchParams.get("slug") || ""
-    if (!sessionId || !slug) return NextResponse.json({ error: "bad_request" }, { status: 400 })
-    if (slug === "pack-integral") return NextResponse.json({ error: "use_pack_page" }, { status: 400 })
+    if (!sessionId || !slug) {
+      return NextResponse.json({ error: "bad_request" }, { status: 400 })
+    }
+    if (slug === "pack-integral") {
+      return NextResponse.json({ error: "use_pack_page" }, { status: 400 })
+    }
 
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
     const full = await stripe.checkout.sessions.retrieve(sessionId, {
       expand: ["line_items.data.price.product"],
     })
-    if (full.payment_status !== "paid") return NextResponse.json({ error: "unpaid" }, { status: 403 })
+    if (full.payment_status !== "paid") {
+      return NextResponse.json({ error: "unpaid" }, { status: 403 })
+    }
 
     const ok = (full.line_items?.data ?? []).some((li) => {
-      const prod = li.price?.product as Stripe.Product
+      const product = li.price?.product
+      const prod =
+        typeof product === "string" ? undefined : (product as Stripe.Product | undefined)
       return prod?.metadata?.slug === slug
     })
-    if (!ok) return NextResponse.json({ error: "item_not_in_session" }, { status: 403 })
+    if (!ok) {
+      return NextResponse.json({ error: "item_not_in_session" }, { status: 403 })
+    }
 
     const fname = files[slug]
-    if (!fname) return NextResponse.json({ error: "file_not_mapped" }, { status: 404 })
+    if (!fname) {
+      return NextResponse.json({ error: "file_not_mapped" }, { status: 404 })
+    }
 
     const filePath = path.join(process.cwd(), "private", "pdfs", fname)
     const buf = await fs.readFile(filePath)
-    const body = new Uint8Array(buf) // ← BodyInit valide
+    const body = new Uint8Array(buf)
 
     return new Response(body, {
       status: 200,
@@ -55,7 +67,8 @@ export async function GET(req: Request) {
         "Cache-Control": "no-store",
       },
     })
-  } catch (e: any) {
-    return NextResponse.json({ error: "download_error", detail: e?.message }, { status: 500 })
+  } catch (e: unknown) {
+    const msg = e instanceof Error ? e.message : "download_error"
+    return NextResponse.json({ error: "download_error", detail: msg }, { status: 500 })
   }
 }

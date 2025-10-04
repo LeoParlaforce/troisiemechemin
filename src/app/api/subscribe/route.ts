@@ -3,13 +3,12 @@ import { NextResponse } from "next/server"
 
 type TrackId = "t1-fr" | "t2-fr"
 
-const must = (k: string) => {
+function must(k: string): string {
   const v = process.env[k]
   if (!v) throw new Error(`Missing ${k}`)
   return v
 }
 
-// ⬇️ pas d'apiVersion ici
 const stripe = new Stripe(must("STRIPE_SECRET_KEY"))
 
 const LABEL: Record<TrackId, string> = {
@@ -19,7 +18,9 @@ const LABEL: Record<TrackId, string> = {
 
 export async function POST(req: Request) {
   try {
-    const { track } = (await req.json()) as { track?: TrackId }
+    const body = (await req.json()) as { track?: TrackId }
+    const track = body.track
+
     if (track !== "t1-fr" && track !== "t2-fr") {
       return NextResponse.json({ error: "bad_track" }, { status: 400 })
     }
@@ -35,7 +36,7 @@ export async function POST(req: Request) {
           price_data: {
             currency: "eur",
             unit_amount,
-            recurring: { interval: "week" as const, interval_count: 2 },
+            recurring: { interval: "week", interval_count: 2 },
             product_data: { name: LABEL[track], metadata: { track } },
           },
           quantity: 1,
@@ -48,7 +49,8 @@ export async function POST(req: Request) {
     })
 
     return NextResponse.json({ url: session.url })
-  } catch (e: any) {
-    return NextResponse.json({ error: e?.message ?? "stripe_error" }, { status: 500 })
+  } catch (e: unknown) {
+    const msg = e instanceof Error ? e.message : "stripe_error"
+    return NextResponse.json({ error: msg }, { status: 500 })
   }
 }

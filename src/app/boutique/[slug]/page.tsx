@@ -4,17 +4,25 @@ import { products, getProductBySlug } from "../data"
 import BuyButton from "./BuyButton"
 
 export function generateStaticParams() {
-  return products.map(p => ({ slug: p.slug }))
+  return products.map((p) => ({ slug: p.slug }))
 }
 
 export async function generateMetadata({ params }: { params: { slug: string } }) {
   const p = getProductBySlug(params.slug)
-  return { title: p ? `${p.title} — troisiemechemin.fr` : "Guide — troisiemechemin.fr" }
+  return {
+    title: p ? `${p.title} — troisiemechemin.fr` : "Guide — troisiemechemin.fr",
+  }
 }
 
-export default function ProductPage({ params }: { params: { slug: string } }) {
-  const p = getProductBySlug(params.slug)
+interface PageProps {
+  params: Promise<{ slug: string }>
+}
+
+export default async function ProductPage({ params }: PageProps) {
+  const { slug } = await params
+  const p = getProductBySlug(slug)
   if (!p) return notFound()
+
   const anchorFR = p.group === "t1" ? "#t1-fr" : "#t2-fr"
 
   return (
@@ -24,7 +32,6 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
           <Image src={p.image} alt={p.title} fill className="object-cover" priority />
         </div>
         <div>
-          {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
           <a href="/boutique" className="text-sm opacity-80 hover:text-accent cursor-pointer">
             ← Retour à la Boutique
           </a>
@@ -41,7 +48,6 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
 
           <div className="mt-8 flex flex-wrap gap-3">
             <BuyButton slug={p.slug} title={p.title} image={p.image} />
-            {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
             <a
               href={`/therapies-groupe${anchorFR}`}
               className="rounded-md border px-6 py-3 text-base transition hover:border-accent hover:text-accent cursor-pointer"

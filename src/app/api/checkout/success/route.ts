@@ -11,28 +11,43 @@ function mustGet(name: string): string {
 }
 const stripe = new Stripe(mustGet("STRIPE_SECRET_KEY"))
 
+type TrackId = "t1-fr" | "t2-fr"
+
 export async function GET(req: Request) {
   const url = new URL(req.url)
   const id = url.searchParams.get("id") || url.searchParams.get("session_id")
   if (!id) return NextResponse.json({ error: "missing_session_id" }, { status: 400 })
 
-  const s = await stripe.checkout.sessions.retrieve(id, { expand: ["subscription", "customer"] })
+  const s = await stripe.checkout.sessions.retrieve(id, {
+    expand: ["subscription", "customer", "line_items"],
+  })
 
-  // ✅ typage propre sans any
-  const track: string | null =
-    (s.metadata && s.metadata.track) ||
+  const track =
+    (s.metadata?.track as string | undefined) ||
     s.client_reference_id ||
     null
 
-  const email: string | null = s.customer_details?.email || null
+  const email = s.customer_details?.email || null
 
+  // slug pour e-book depuis la 1ère ligne
+  const li = s.line_items?.data?.[0]
+  const slug =
+    (li?.description
+      ? li.description.toLowerCase().replace(/\s+/g, "-")
+      : null) || null
+
+  const res = NextResponse.json({ track, email, slug }, { status: 200 })
+
+  // cookie membre uniquement pour les groupes
+  const isMember = track === "t1-fr" || track === "t2-fr"
   const customerId =
-    typeof s.customer === "string" ? s.customer :
-    (s.customer ? (s.customer as Stripe.Customer).id : null)
+    typeof s.customer === "string"
+      ? s.customer
+      : s.customer
+      ? (s.customer as Stripe.Customer).id
+      : null
 
-  const res = NextResponse.json({ track, email }, { status: 200 })
-
-  if (customerId && track) {
+  if (customerId && isMember) {
     res.cookies.set("member_cid", customerId, {
       httpOnly: true,
       sameSite: "lax",

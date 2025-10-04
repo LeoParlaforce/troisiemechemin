@@ -7,8 +7,13 @@ export function generateStaticParams() {
   return products.map((p) => ({ slug: p.slug }))
 }
 
-export async function generateMetadata({ params }: { params: { slug: string } }) {
-  const p = getProductBySlug(params.slug)
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>
+}) {
+  const { slug } = await params
+  const p = getProductBySlug(slug)
   return {
     title: p ? `${p.title} — troisiemechemin.fr` : "Guide — troisiemechemin.fr",
   }
@@ -30,6 +35,7 @@ export default async function ProductPage({ params }: PageProps) {
           <Image src={p.image} alt={p.title} fill className="object-cover" priority />
         </div>
         <div>
+          {/* lien interne volontaire en <a> */}
           {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
           <a href="/boutique" className="text-sm opacity-80 hover:text-accent">
             ← Retour à la Boutique
@@ -47,6 +53,7 @@ export default async function ProductPage({ params }: PageProps) {
 
           <div className="mt-8 flex flex-wrap gap-3">
             <BuyButton slug={p.slug} title={p.title} image={p.image} />
+            {/* lien interne volontaire en <a> */}
             <a
               href={`/therapies-groupe${anchorFR}`}
               className="rounded-md border px-6 py-3 text-base transition hover:border-accent hover:text-accent"

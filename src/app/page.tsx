@@ -1,4 +1,4 @@
-import Link from "next/link"
+import NextLink from "next/link"
 import Image from "next/image"
 
 export default function Home() {
@@ -15,26 +15,25 @@ export default function Home() {
               Accompagnement psychologique et guides pratiques. E-books et groupe de paroles par visio en ligne.
             </p>
             <div className="mt-10 flex flex-wrap gap-4">
-              <Link
+              <NextLink
                 href="/boutique"
                 className="rounded-md bg-accent px-6 py-3 text-white text-base font-medium
                            transition transform-gpu hover:-translate-y-1 hover:scale-[1.02] hover:shadow-lg
                            focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
               >
                 Découvrir les guides
-              </Link>
-              <Link
+              </NextLink>
+              <NextLink
                 href="/therapies-groupe"
                 className="rounded-md border px-6 py-3 text-base font-medium
                            transition transform-gpu hover:-translate-y-1 hover:border-accent hover:text-accent hover:shadow-md
                            focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
               >
                 Groupes de parole thématiques en visio
-              </Link>
+              </NextLink>
             </div>
           </div>
 
-          {/* Hero 3:2 avec cadrage ajustable */}
           <div className="relative aspect-[3/2] w-full overflow-hidden rounded-xl border">
             <Image
               src="/hero.jpg"
@@ -53,8 +52,8 @@ export default function Home() {
         <h2 className="text-3xl font-semibold">Ce que tu trouveras ici</h2>
 
         <div className="mt-8 grid gap-6 md:grid-cols-3">
-          {/* Carte 1 — Guides (image) */}
-          <Link
+          {/* Carte 1 — Guides */}
+          <NextLink
             href="/boutique"
             aria-label="Voir les guides complets"
             className="group block rounded-xl border overflow-hidden transition
@@ -79,10 +78,10 @@ export default function Home() {
                 Procrastination et créativité, Hauts potentiels.
               </p>
             </div>
-          </Link>
+          </NextLink>
 
-          {/* Carte 2 — Groupes (image) */}
-          <Link
+          {/* Carte 2 — Groupes */}
+          <NextLink
             href="/therapies-groupe"
             aria-label="Voir les groupes de parole"
             className="group block rounded-xl border overflow-hidden transition
@@ -105,7 +104,7 @@ export default function Home() {
                 Séances thématiques bimensuelles en visio animées par un psychologue expert.
               </p>
             </div>
-          </Link>
+          </NextLink>
 
           {/* Carte 3 — non clickable */}
           <article className="rounded-xl border p-6 transition hover:shadow-md hover:border-accent/50">

@@ -31,7 +31,7 @@ export default function SuccessClient() {
 
   const [track, setTrack] = useState<TrackId | null>(null)
   const [email, setEmail] = useState<string | null>(null)
-  const [slug, setSlug] = useState<string | null>(null) // e-book
+  const [slug, setSlug] = useState<string | null>(null)
   const [sending, setSending] = useState(false)
 
   useEffect(() => {
@@ -92,7 +92,6 @@ export default function SuccessClient() {
         </p>
       )}
 
-      {/* Groupe: calendrier */}
       {track && (
         <div className="mt-6 space-y-3">
           <p className="opacity-80">
@@ -110,11 +109,10 @@ export default function SuccessClient() {
         </div>
       )}
 
-      {/* E-book: téléchargement immédiat */}
       {!track && slug && (
         <div className="mt-8">
           <a
-            href={`/boutique/${slug}`} {/* si tu as /api/download/[slug], remplace ici */}
+            href={`/boutique/${slug}`}
             className="inline-block rounded-md bg-purple-600 text-white px-4 py-2 text-sm hover:bg-purple-700 transition"
           >
             Télécharger maintenant
@@ -122,7 +120,6 @@ export default function SuccessClient() {
         </div>
       )}
 
-      {/* Tarif membre uniquement pour les inscrits aux groupes */}
       {isMember && (
         <section className="mt-12">
           <h2 className="text-2xl font-semibold">Guides — tarif membre</h2>

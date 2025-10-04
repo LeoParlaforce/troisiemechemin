@@ -106,7 +106,6 @@ export default function SuccessPage() {
       {track && (
         <div className="mt-6 space-y-3">
           <p className="opacity-80">Inscription confirmée pour <strong>{track}</strong>.</p>
-          {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
           <a
             href={gcal}
             target="_blank"
@@ -155,7 +154,6 @@ export default function SuccessPage() {
                     >
                       Acheter à {newPrice} €
                     </button>
-                    {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
                     <a
                       href={`/boutique/${p.slug}`}
                       className="px-3 py-2 rounded border text-sm hover:border-accent hover:text-accent transition"

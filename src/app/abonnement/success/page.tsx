@@ -17,7 +17,6 @@ export default async function SubSuccess({
         <h1 className="text-3xl font-bold">Inscription confirmée</h1>
         <p className="mt-3 opacity-80">
           Retour aux{" "}
-          {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
           <a href="/therapies-groupe" className="underline">
             Groupes
           </a>.
@@ -46,7 +45,6 @@ export default async function SubSuccess({
       <div className="mt-6 rounded border p-4 space-y-3">
         <div className="font-semibold">{title}</div>
         {track && (
-          // eslint-disable-next-line @next/next/no-html-link-for-pages
           <a
             href={`/api/ics?track=${encodeURIComponent(track)}`}
             className="inline-block rounded-md bg-accent px-4 py-2 text-white text-sm"
@@ -58,7 +56,6 @@ export default async function SubSuccess({
       </div>
 
       <div className="mt-8 grid gap-3 sm:grid-cols-2">
-        {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
         <a
           href="/therapies-groupe"
           className="rounded-md border px-4 py-3 text-center transition hover:border-accent hover:text-accent"

@@ -14,9 +14,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   }
 }
 
-interface PageProps {
-  params: Promise<{ slug: string }>
-}
+interface PageProps { params: Promise<{ slug: string }> }
 
 export default async function ProductPage({ params }: PageProps) {
   const { slug } = await params
@@ -32,7 +30,8 @@ export default async function ProductPage({ params }: PageProps) {
           <Image src={p.image} alt={p.title} fill className="object-cover" priority />
         </div>
         <div>
-          <a href="/boutique" className="text-sm opacity-80 hover:text-accent cursor-pointer">
+          {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+          <a href="/boutique" className="text-sm opacity-80 hover:text-accent">
             ← Retour à la Boutique
           </a>
 
@@ -50,15 +49,13 @@ export default async function ProductPage({ params }: PageProps) {
             <BuyButton slug={p.slug} title={p.title} image={p.image} />
             <a
               href={`/therapies-groupe${anchorFR}`}
-              className="rounded-md border px-6 py-3 text-base transition hover:border-accent hover:text-accent cursor-pointer"
+              className="rounded-md border px-6 py-3 text-base transition hover:border-accent hover:text-accent"
             >
               Rejoindre le groupe (FR)
             </a>
           </div>
 
-          <p className="mt-6 text-sm opacity-70">
-            Format PDF. Lecture ordinateur et mobile. Mises à jour incluses.
-          </p>
+          <p className="mt-6 text-sm opacity-70">Format PDF. Lecture ordinateur et mobile. Mises à jour incluses.</p>
         </div>
       </section>
     </main>

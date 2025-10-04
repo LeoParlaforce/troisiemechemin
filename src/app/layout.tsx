@@ -30,7 +30,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 { href: "/boutique", label: "Boutique" },
                 { href: "/therapies-groupe", label: "Groupes de parole" },
               ].map((l) => (
-                // eslint-disable-next-line @next/next/no-html-link-for-pages
                 <a
                   key={l.href}
                   href={l.href}

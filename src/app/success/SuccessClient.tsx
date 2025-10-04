@@ -23,8 +23,6 @@ function gcalUrl(p: { title: string; start: string; end: string; details?: strin
   return `https://calendar.google.com/calendar/render?action=TEMPLATE&${q.toString()}`
 }
 
-type DiscountProduct = { slug: string; title: string; image?: string }
-
 export default function SuccessClient() {
   const sp = useSearchParams()
   const sid = sp.get("session_id") || sp.get("id")
@@ -69,29 +67,20 @@ export default function SuccessClient() {
     })
   }, [track])
 
-  const discounted: DiscountProduct[] = useMemo(() => {
-    const list: DiscountProduct[] = products.map(p => ({
-      slug: p.slug,
-      title: p.title,
-      image: p.image || "",
-    }))
-    if (!list.some(p => p.slug === "pack-integral"))
-      list.unshift({ slug: "pack-integral", title: "Pack intégral", image: "" })
-    return list
-  }, [])
-
-  const isMember = Boolean(track)
+  const suggestions = useMemo(() => {
+    return products.filter(p => p.slug !== slug).slice(0, 6)
+  }, [slug])
 
   return (
     <main className="max-w-5xl mx-auto px-6 py-16 text-foreground">
       <h1 className="text-3xl font-bold">Paiement confirmé</h1>
-
       {email && (
         <p className="mt-2 opacity-80">
           Confirmation envoyée à <span className="font-medium">{email}</span>.
         </p>
       )}
 
+      {/* Groupes */}
       {track && (
         <div className="mt-6 space-y-3">
           <p className="opacity-80">
@@ -109,6 +98,7 @@ export default function SuccessClient() {
         </div>
       )}
 
+      {/* E-book */}
       {!track && slug && (
         <div className="mt-8">
           <a
@@ -120,39 +110,33 @@ export default function SuccessClient() {
         </div>
       )}
 
-      {isMember && (
+      {/* Suggestions */}
+      {!track && suggestions.length > 0 && (
         <section className="mt-12">
-          <h2 className="text-2xl font-semibold">Guides — tarif membre</h2>
-          <p className="mt-1 text-sm opacity-70">
-            Chaque guide est à <strong>5 €</strong> (au lieu de 9 €). Le pack intégral est à <strong>29 €</strong> (au lieu de 49 €).
-          </p>
-
+          <h2 className="text-2xl font-semibold">Autres guides qui peuvent vous intéresser</h2>
           <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {discounted.map(p => {
-              const isPack = p.slug === "pack-integral"
-              const newPrice = isPack ? 29 : 5
-              const oldPrice = isPack ? 49 : 9
-              return (
-                <article key={p.slug} className="border rounded-lg overflow-hidden">
-                  {p.image && (
-                    <Image
-                      src={p.image}
-                      alt={p.title}
-                      width={400}
-                      height={200}
-                      className="w-full h-40 object-cover"
-                    />
-                  )}
-                  <div className="p-4">
-                    <h3 className="font-medium">{p.title}</h3>
-                    <p className="mt-1 text-sm">
-                      <span className="font-semibold">{newPrice} €</span>{" "}
-                      <span className="opacity-60 line-through">{oldPrice} €</span>
-                    </p>
-                  </div>
-                </article>
-              )
-            })}
+            {suggestions.map(p => (
+              <article key={p.slug} className="border rounded-lg overflow-hidden">
+                {p.image && (
+                  <Image
+                    src={p.image}
+                    alt={p.title}
+                    width={400}
+                    height={200}
+                    className="w-full h-40 object-cover"
+                  />
+                )}
+                <div className="p-4">
+                  <h3 className="font-medium">{p.title}</h3>
+                  <a
+                    href={`/boutique/${p.slug}`}
+                    className="inline-block mt-3 text-sm text-purple-600 hover:underline"
+                  >
+                    Voir le guide
+                  </a>
+                </div>
+              </article>
+            ))}
           </div>
         </section>
       )}

@@ -11,8 +11,6 @@ function mustGet(name: string): string {
 }
 const stripe = new Stripe(mustGet("STRIPE_SECRET_KEY"))
 
-type TrackId = "t1-fr" | "t2-fr"
-
 export async function GET(req: Request) {
   const url = new URL(req.url)
   const id = url.searchParams.get("id") || url.searchParams.get("session_id")
@@ -29,7 +27,6 @@ export async function GET(req: Request) {
 
   const email = s.customer_details?.email || null
 
-  // slug pour e-book depuis la 1ère ligne
   const li = s.line_items?.data?.[0]
   const slug =
     (li?.description
@@ -38,7 +35,6 @@ export async function GET(req: Request) {
 
   const res = NextResponse.json({ track, email, slug }, { status: 200 })
 
-  // cookie membre uniquement pour les groupes
   const isMember = track === "t1-fr" || track === "t2-fr"
   const customerId =
     typeof s.customer === "string"

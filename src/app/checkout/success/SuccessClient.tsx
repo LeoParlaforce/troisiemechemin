@@ -65,29 +65,48 @@ export default function SuccessClient() {
   }, [track])
 
   const discounted = useMemo(() => {
-    const list = products.map(p => ({ slug: p.slug, title: p.title, image: p.image }))
-    if (!list.some(p => p.slug === "pack-integral"))
-      list.unshift({ slug: "pack-integral", title: "Pack intégral" })
+    const list = products.map(p => ({
+      slug: p.slug,
+      title: p.title,
+      image: p.image || "",
+    }))
+    if (!list.some(p => p.slug === "pack-integral")) {
+      list.unshift({ slug: "pack-integral", title: "Pack intégral", image: "" })
+    }
     return list
   }, [])
+
+  const isMember = Boolean(track)
 
   return (
     <main className="max-w-5xl mx-auto px-6 py-16 text-foreground">
       <h1 className="text-3xl font-bold">Paiement confirmé</h1>
-      {email && <p className="mt-2 opacity-80">Confirmation envoyée à <span className="font-medium">{email}</span>.</p>}
-
-      {track && (
-        <div className="mt-6 space-y-3">
-          <p className="opacity-80">Inscription confirmée pour <strong>{track}</strong>.</p>
-          <a href={gcal} target="_blank" rel="noopener noreferrer"
-             className="inline-block rounded-md border px-4 py-2 text-sm transition hover:border-accent hover:text-accent">
-            Ajouter à Google Calendar
-          </a>
-          {sending && <p className="text-xs opacity-60">Envoi des infos par email…</p>}
-        </div>
+      {email && (
+        <p className="mt-2 opacity-80">
+          Confirmation envoyée à <span className="font-medium">{email}</span>.
+        </p>
       )}
 
       {track && (
+        <div className="mt-6 space-y-3">
+          <p className="opacity-80">
+            Inscription confirmée pour <strong>{track}</strong>.
+          </p>
+          <a
+            href={gcal}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block rounded-md border px-4 py-2 text-sm transition hover:border-accent hover:text-accent"
+          >
+            Ajouter à Google Calendar
+          </a>
+          {sending && (
+            <p className="text-xs opacity-60">Envoi des infos par email…</p>
+          )}
+        </div>
+      )}
+
+      {isMember && (
         <section className="mt-12">
           <h2 className="text-2xl font-semibold">Guides — tarif membre</h2>
           <p className="mt-1 text-sm opacity-70">
@@ -103,8 +122,13 @@ export default function SuccessClient() {
               return (
                 <article key={p.slug} className="border rounded-lg overflow-hidden">
                   {p.image && (
-                    <Image src={p.image} alt={p.title} width={400} height={200}
-                           className="w-full h-40 object-cover" />
+                    <Image
+                      src={p.image}
+                      alt={p.title}
+                      width={400}
+                      height={200}
+                      className="w-full h-40 object-cover"
+                    />
                   )}
                   <div className="p-4">
                     <h3 className="font-medium">{p.title}</h3>

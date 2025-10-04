@@ -15,6 +15,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className={`${garamond.variable} font-serif min-h-screen flex flex-col`}>
         <header className="sticky top-0 z-50 bg-header/95 backdrop-blur border-b border-muted shadow-sm">
           <div className="mx-auto max-w-7xl px-6 py-3 flex items-center justify-between">
+            {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
             <a
               href="/"
               className="text-lg font-semibold tracking-wide transition
@@ -29,6 +30,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 { href: "/boutique", label: "Boutique" },
                 { href: "/therapies-groupe", label: "Groupes de parole" },
               ].map((l) => (
+                // eslint-disable-next-line @next/next/no-html-link-for-pages
                 <a
                   key={l.href}
                   href={l.href}

@@ -1,0 +1,10 @@
+{
+  "redirects": [
+    {
+      "source": "/api/checkout/stripe/webhook",
+      "destination": "/api/checkout/stripe/webhook",
+      "has": [{ "type": "host", "value": "troisiemechemin.fr" }],
+      "permanent": false
+    }
+  ]
+}

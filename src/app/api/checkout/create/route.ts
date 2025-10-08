@@ -1,4 +1,3 @@
-// app/api/checkout/create/route.ts (ou ton fichier actuel)
 import { NextResponse } from "next/server"
 import Stripe from "stripe"
 
@@ -29,7 +28,9 @@ export async function POST(req: Request) {
   const currency = "eur"
 
   const eur = Number(process.env.GROUP_PRICE_EUR_CENTS || "0")
-  if (!eur) return NextResponse.json({ error: "price_missing" }, { status: 500 })
+  if (!eur) {
+    return NextResponse.json({ error: "price_missing" }, { status: 500 })
+  }
 
   const nameByTrack: Record<TrackId, string> = {
     "t1-fr": "Groupe Thème 1 — FR",
@@ -37,12 +38,14 @@ export async function POST(req: Request) {
   }
 
   const trial_end = track === "t1-fr" ? T1_START_UTC : T2_START_UTC
+  const now = Math.floor(Date.now() / 1000)
+  const effectiveTrialEnd = trial_end > now ? trial_end : now
 
   const session = await stripe.checkout.sessions.create({
     mode: "subscription",
+    locale: "fr",
     client_reference_id: track,
     metadata: { track },
-    locale: "fr",
     success_url: `${origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: `${origin}/therapies-groupe#inscription-${track}`,
     allow_promotion_codes: true,
@@ -58,7 +61,9 @@ export async function POST(req: Request) {
       },
     ],
     subscription_data: {
-      trial_end,                 // premier prélèvement à la date voulue
+      // Stripe exige billing_cycle_anchor quand on passe proration_behavior
+      billing_cycle_anchor: effectiveTrialEnd,
+      trial_end: effectiveTrialEnd,
       proration_behavior: "none",
       metadata: { track },
     },

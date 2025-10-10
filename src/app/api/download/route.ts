@@ -1,9 +1,13 @@
+// src/app/api/download/route.ts
 import { NextResponse } from "next/server"
 import Stripe from "stripe"
 import fs from "node:fs/promises"
 import path from "node:path"
 
 export const runtime = "nodejs"
+
+const PACK_SLUG = "pack-integral"
+const PACK_ARCHIVE = "Guides psychologiques - Pack intégral.rar" // fichier dans /private/pdfs
 
 const files: Record<string, string> = {
   "introduction-aux-guides": "Introduction aux guides.pdf",
@@ -20,6 +24,13 @@ const files: Record<string, string> = {
   "hauts-potentiels": "Hauts Potentiels - guide psychologique & pratique.pdf",
 }
 
+function mimeForArchive(filename: string): string {
+  const lower = filename.toLowerCase()
+  if (lower.endsWith(".zip")) return "application/zip"
+  if (lower.endsWith(".rar")) return "application/x-rar-compressed"
+  return "application/octet-stream"
+}
+
 export async function GET(req: Request) {
   try {
     const url = new URL(req.url)
@@ -27,9 +38,6 @@ export async function GET(req: Request) {
     const slug = url.searchParams.get("slug") || ""
     if (!sessionId || !slug) {
       return NextResponse.json({ error: "bad_request" }, { status: 400 })
-    }
-    if (slug === "pack-integral") {
-      return NextResponse.json({ error: "use_pack_page" }, { status: 400 })
     }
 
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
@@ -42,24 +50,33 @@ export async function GET(req: Request) {
 
     const ok = (full.line_items?.data ?? []).some((li) => {
       const product = li.price?.product
-      const prod =
-        typeof product === "string" ? undefined : (product as Stripe.Product | undefined)
+      const prod = typeof product === "string" ? undefined : (product as Stripe.Product | undefined)
       return prod?.metadata?.slug === slug
     })
-    if (!ok) {
-      return NextResponse.json({ error: "item_not_in_session" }, { status: 403 })
+    if (!ok) return NextResponse.json({ error: "item_not_in_session" }, { status: 403 })
+
+    // Pack -> archive .rar
+    if (slug === PACK_SLUG) {
+      const archPath = path.join(process.cwd(), "private", "pdfs", PACK_ARCHIVE)
+      const buf = await fs.readFile(archPath)
+      return new Response(new Uint8Array(buf), {
+        status: 200,
+        headers: {
+          "Content-Type": mimeForArchive(PACK_ARCHIVE),
+          "Content-Disposition": `attachment; filename="${PACK_ARCHIVE}"`,
+          "Cache-Control": "no-store",
+        },
+      })
     }
 
+    // PDF unitaire
     const fname = files[slug]
-    if (!fname) {
-      return NextResponse.json({ error: "file_not_mapped" }, { status: 404 })
-    }
+    if (!fname) return NextResponse.json({ error: "file_not_mapped" }, { status: 404 })
 
     const filePath = path.join(process.cwd(), "private", "pdfs", fname)
-    const buf = await fs.readFile(filePath)
-    const body = new Uint8Array(buf)
+    const pdf = await fs.readFile(filePath)
 
-    return new Response(body, {
+    return new Response(new Uint8Array(pdf), {
       status: 200,
       headers: {
         "Content-Type": "application/pdf",

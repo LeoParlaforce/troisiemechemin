@@ -6,6 +6,7 @@ export const runtime = "nodejs"
 export const dynamic = "force-dynamic"
 
 type TrackId = "t1-fr" | "t2-fr"
+const CAP = 10
 
 function mustGet(name: string): string {
   const v = process.env[name]
@@ -19,10 +20,29 @@ const stripe = new Stripe(mustGet("STRIPE_SECRET_KEY"))
 const T1_START_UTC = Math.floor(Date.UTC(2026, 0, 7, 16, 0, 0) / 1000)  // 2026-01-07
 const T2_START_UTC = Math.floor(Date.UTC(2026, 0, 14, 16, 0, 0) / 1000) // 2026-01-14
 
+async function countActiveFor(track: TrackId): Promise<number> {
+  const query = `(status:'active' OR status:'trialing') AND metadata['track']:'${track}'`
+  let count = 0
+  let next_page: string | null = null
+  do {
+    const res = await stripe.subscriptions.search({ query, limit: 100, page: next_page ?? undefined })
+    count += res.data.length
+    next_page = (res as any).next_page || null
+    if (count >= CAP) return count
+  } while (next_page)
+  return count
+}
+
 export async function POST(req: Request) {
-  const { track } = (await req.json()) as { track?: TrackId }
-  if (!track || !["t1-fr", "t2-fr"].includes(track)) {
+  const { track } = (await req.json().catch(() => ({}))) as { track?: TrackId }
+  if (track !== "t1-fr" && track !== "t2-fr") {
     return NextResponse.json({ error: "invalid_track" }, { status: 400 })
+  }
+
+  // Gate capacité
+  const used = await countActiveFor(track)
+  if (used >= CAP) {
+    return NextResponse.json({ error: "track_full", track, used, cap: CAP }, { status: 409 })
   }
 
   const origin = process.env.NEXT_PUBLIC_SITE_URL || new URL(req.url).origin
@@ -50,15 +70,20 @@ export async function POST(req: Request) {
           recurring: { interval: "week", interval_count: 2 },
           product_data: {
             name: track === "t1-fr" ? "Groupe Thème 1 — FR" : "Groupe Thème 2 — FR",
+            metadata: { track },
           },
         },
       },
     ],
     subscription_data: {
-      trial_end: effectiveTrialEnd, // première facturation à la date voulue
+      trial_end: effectiveTrialEnd,
       metadata: { track },
     },
   })
 
   return NextResponse.json({ url: session.url }, { status: 200 })
+}
+
+export async function GET() {
+  return NextResponse.json({ ok: true, endpoint: "checkout/create" })
 }

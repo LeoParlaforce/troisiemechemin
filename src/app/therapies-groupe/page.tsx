@@ -68,7 +68,7 @@ function GroupCard({ t, avail }: { t: Track; avail: Availability[TrackId] }) {
           <li>• Max. 10 personnes</li>
           <li>• Visio-conférence</li>
           <li>• {priceText()}</li>
-          {!avail.full && <li>• {avail.spotsLeft} place(s) restante(s)</li>}
+          {/* compteur de places masqué */}
         </ul>
 
         <div className="mt-5 flex flex-wrap gap-3">
@@ -158,11 +158,11 @@ export default function Groupes() {
     <main suppressHydrationWarning className="min-h-screen text-foreground">
       <section className="mx-auto max-w-6xl px-6 py-16">
         <h1 className="text-4xl md:text-5xl font-bold">Groupes de parole thématiques</h1>
-      <p className="mt-3 text-lg opacity-80">
-  Début <strong>janvier 2026</strong>. Inscrivez-vous au(x) groupe(s) de votre choix.
-  Séance de 90 minutes, 1 séance visio-conférence toutes les 2 semaines.
-  Sur le même créneau&nbsp;: thème 1 groupe A semaine A, thème 2 groupe B semaine B.
-</p>
+        <p className="mt-3 text-lg opacity-80">
+          Début <strong>janvier 2026</strong>. Inscrivez-vous au(x) groupe(s) de votre choix.
+          Séance de 90 minutes, 1 séance visio-conférence toutes les 2 semaines.
+          Sur le même créneau&nbsp;: thème 1 groupe A semaine A, thème 2 groupe B semaine B.
+        </p>
         <p className="mt-2 text-sm opacity-80">
           Vous ne prendrez la parole que si vous le souhaitez, aux groupes de parole vous n&apos;êtes obligé de rien.
           Certains membres viennent pour écouter, d&apos;autres aussi pour participer. C&apos;est à vous de décider.

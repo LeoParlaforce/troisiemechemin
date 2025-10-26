@@ -9,7 +9,7 @@ export const runtime = "nodejs"
 export const dynamic = "force-dynamic"
 
 const PACK_SLUG = "pack-integral"
-const PACK_ARCHIVE = "Guides psychologiques - Pack intégral.rar" // dans /public/
+const PACK_ARCHIVE = "Guides psychologiques - Pack intégral.rar" // présent dans /public/
 
 const files: Record<string, string> = {
   "introduction-aux-guides": "Introduction aux guides.pdf",
@@ -26,61 +26,64 @@ const files: Record<string, string> = {
   "hauts-potentiels": "Hauts Potentiels - guide psychologique & pratique.pdf",
 }
 
-function mimeForArchive(name: string) {
-  return name.toLowerCase().endsWith(".zip") ? "application/zip" : "application/octet-stream"
+function mimeForArchive(n: string) {
+  return n.toLowerCase().endsWith(".zip") ? "application/zip" : "application/octet-stream"
 }
 function contentDisposition(filename: string) {
   const ascii = filename.replace(/[^\x20-\x7E]/g, "_")
   const utf8 = encodeURIComponent(filename).replace(/['()]/g, c => `%${c.charCodeAt(0).toString(16).toUpperCase()}`).replace(/\*/g, "%2A")
   return `attachment; filename="${ascii}"; filename*=UTF-8''${utf8}`
 }
-
-async function streamFile(absPath: string, displayName: string, type: string) {
-  const stat = await fsp.stat(absPath)
-  const stream = fs.createReadStream(absPath)
+async function streamFile(p: string, name: string, type: string) {
+  const st = await fsp.stat(p)
+  const s = fs.createReadStream(p)
   const h = new Headers()
   h.set("Content-Type", type)
-  h.set("Content-Length", String(stat.size))
+  h.set("Content-Length", String(st.size))
   h.set("Accept-Ranges", "bytes")
   h.set("Cache-Control", "no-store, private")
-  h.set("Content-Disposition", contentDisposition(displayName))
-  return new Response(stream as unknown as ReadableStream, { status: 200, headers: h })
+  h.set("Content-Disposition", contentDisposition(name))
+  return new Response(s as unknown as ReadableStream, { status: 200, headers: h })
 }
 
 export async function GET(req: Request) {
   try {
     const url = new URL(req.url)
-    const sessionId = url.searchParams.get("session_id") || ""
     const slug = url.searchParams.get("slug") || ""
+    const sessionId = url.searchParams.get("session_id") || ""
+    const diag = url.searchParams.get("diag") === "1"
+
     if (!slug) return NextResponse.json({ error: "bad_request" }, { status: 400 })
 
-    // BYPASS TEST contrôlé: ALLOW_PACK_TEST=1 permet de tester le pack sans Stripe
-    if (process.env.ALLOW_PACK_TEST === "1" && slug === PACK_SLUG) {
+    // BYPASS TEST: /api/download?slug=pack-integral&diag=1
+    if (diag && slug === PACK_SLUG) {
       const p = path.join(process.cwd(), "public", PACK_ARCHIVE)
       return streamFile(p, PACK_ARCHIVE, mimeForArchive(PACK_ARCHIVE))
     }
 
     if (!sessionId) return NextResponse.json({ error: "missing_session_id" }, { status: 400 })
 
-    // Vérif Stripe
+    // Vérif Stripe (clé live de prod)
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string)
     const s = await stripe.checkout.sessions.retrieve(sessionId, { expand: ["line_items.data.price.product"] })
     if (!s || s.payment_status !== "paid") {
       return NextResponse.json({ error: "stripe_session_invalid", detail: s?.payment_status ?? null }, { status: 403 })
     }
 
-    const hasItem = (s.line_items?.data ?? []).some(li => {
+    // Autorisation de l’article
+    const ok = (s.line_items?.data ?? []).some(li => {
       const product = li.price?.product
       const prod = typeof product === "string" ? undefined : (product as Stripe.Product | undefined)
-      const metaSlug = prod?.metadata?.slug ?? ""
+      const meta = prod?.metadata?.slug ?? ""
       const name = (prod?.name ?? "").toLowerCase()
       if (slug === PACK_SLUG) {
-        return metaSlug === "pack-integral" || metaSlug === "pack" || metaSlug === "pack-integral-winrar" || name.includes("pack intégral") || name.includes("pack integral")
+        return meta === "pack-integral" || meta === "pack" || meta === "pack-integral-winrar" || name.includes("pack intégral") || name.includes("pack integral")
       }
-      return metaSlug === slug
+      return meta === slug
     })
-    if (!hasItem) return NextResponse.json({ error: "item_not_in_session" }, { status: 403 })
+    if (!ok) return NextResponse.json({ error: "item_not_in_session" }, { status: 403 })
 
+    // Envoi du fichier
     if (slug === PACK_SLUG) {
       const p = path.join(process.cwd(), "public", PACK_ARCHIVE)
       return streamFile(p, PACK_ARCHIVE, mimeForArchive(PACK_ARCHIVE))

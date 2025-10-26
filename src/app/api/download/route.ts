@@ -45,33 +45,40 @@ async function streamFile(p: string, name: string, type: string) {
   return new Response(s as unknown as ReadableStream, { status: 200, headers: h })
 }
 
+function normalizeSlug(raw: string): { slug: string; isPack: boolean } {
+  const r = raw.toLowerCase()
+  const isPack = r === "pack-integral" || r === "pack-integral-winrar" || r === "pack"
+  return { slug: isPack ? PACK_SLUG : raw, isPack }
+}
+
 export async function GET(req: Request) {
   try {
     const url = new URL(req.url)
-    const slug = url.searchParams.get("slug") || ""
+    const rawSlug = url.searchParams.get("slug") || ""
     const sessionId = url.searchParams.get("session_id") || ""
     const diag = url.searchParams.get("diag") === "1"
+    if (!rawSlug) return NextResponse.json({ error: "bad_request" }, { status: 400 })
 
-    if (!slug) return NextResponse.json({ error: "bad_request" }, { status: 400 })
+    const { slug, isPack } = normalizeSlug(rawSlug)
 
     // Bypass test: /api/download?slug=pack-integral&diag=1
-    if (diag && slug === PACK_SLUG) {
+    if (diag && isPack) {
       const p = path.join(process.cwd(), "public", PACK_ARCHIVE)
       return streamFile(p, PACK_ARCHIVE, mimeForArchive(PACK_ARCHIVE))
     }
 
     if (!sessionId) return NextResponse.json({ error: "missing_session_id" }, { status: 400 })
 
-    // Vérif Stripe
+    // Stripe
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string)
     const s = await stripe.checkout.sessions.retrieve(sessionId, { expand: ["line_items.data.price.product"] })
     if (!s || s.payment_status !== "paid") {
       return NextResponse.json({ error: "stripe_session_invalid", detail: s?.payment_status ?? null }, { status: 403 })
     }
 
-    // Autorisation: pour le pack on accepte dès que la session est payée
+    // Autorisation: pack accepté dès que session payée
     let authorized = false
-    if (slug === PACK_SLUG) {
+    if (isPack) {
       authorized = true
     } else {
       authorized = (s.line_items?.data ?? []).some(li => {
@@ -83,8 +90,8 @@ export async function GET(req: Request) {
     }
     if (!authorized) return NextResponse.json({ error: "item_not_in_session" }, { status: 403 })
 
-    // Envoi du fichier
-    if (slug === PACK_SLUG) {
+    // Envoi
+    if (isPack) {
       const p = path.join(process.cwd(), "public", PACK_ARCHIVE)
       return streamFile(p, PACK_ARCHIVE, mimeForArchive(PACK_ARCHIVE))
     }

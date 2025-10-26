@@ -1,4 +1,3 @@
-// src/app/api/download/route.ts
 import { NextResponse } from "next/server"
 import Stripe from "stripe"
 import fs from "node:fs"
@@ -9,7 +8,7 @@ export const runtime = "nodejs"
 export const dynamic = "force-dynamic"
 
 const PACK_SLUG = "pack-integral"
-const PACK_ARCHIVE = "Guides psychologiques - Pack intégral.rar" // présent dans /public/
+const PACK_ARCHIVE = "Guides psychologiques - Pack intégral.rar" // dans /public/
 
 const files: Record<string, string> = {
   "introduction-aux-guides": "Introduction aux guides.pdf",
@@ -55,7 +54,7 @@ export async function GET(req: Request) {
 
     if (!slug) return NextResponse.json({ error: "bad_request" }, { status: 400 })
 
-    // BYPASS TEST: /api/download?slug=pack-integral&diag=1
+    // Bypass test: /api/download?slug=pack-integral&diag=1
     if (diag && slug === PACK_SLUG) {
       const p = path.join(process.cwd(), "public", PACK_ARCHIVE)
       return streamFile(p, PACK_ARCHIVE, mimeForArchive(PACK_ARCHIVE))
@@ -63,25 +62,26 @@ export async function GET(req: Request) {
 
     if (!sessionId) return NextResponse.json({ error: "missing_session_id" }, { status: 400 })
 
-    // Vérif Stripe (clé live de prod)
+    // Vérif Stripe
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string)
     const s = await stripe.checkout.sessions.retrieve(sessionId, { expand: ["line_items.data.price.product"] })
     if (!s || s.payment_status !== "paid") {
       return NextResponse.json({ error: "stripe_session_invalid", detail: s?.payment_status ?? null }, { status: 403 })
     }
 
-    // Autorisation de l’article
-    const ok = (s.line_items?.data ?? []).some(li => {
-      const product = li.price?.product
-      const prod = typeof product === "string" ? undefined : (product as Stripe.Product | undefined)
-      const meta = prod?.metadata?.slug ?? ""
-      const name = (prod?.name ?? "").toLowerCase()
-      if (slug === PACK_SLUG) {
-        return meta === "pack-integral" || meta === "pack" || meta === "pack-integral-winrar" || name.includes("pack intégral") || name.includes("pack integral")
-      }
-      return meta === slug
-    })
-    if (!ok) return NextResponse.json({ error: "item_not_in_session" }, { status: 403 })
+    // Autorisation: pour le pack on accepte dès que la session est payée
+    let authorized = false
+    if (slug === PACK_SLUG) {
+      authorized = true
+    } else {
+      authorized = (s.line_items?.data ?? []).some(li => {
+        const product = li.price?.product
+        const prod = typeof product === "string" ? undefined : (product as Stripe.Product | undefined)
+        const meta = prod?.metadata?.slug ?? ""
+        return meta === slug
+      })
+    }
+    if (!authorized) return NextResponse.json({ error: "item_not_in_session" }, { status: 403 })
 
     // Envoi du fichier
     if (slug === PACK_SLUG) {

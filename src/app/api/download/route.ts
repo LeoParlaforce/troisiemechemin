@@ -9,7 +9,7 @@ export const runtime = "nodejs"
 export const dynamic = "force-dynamic"
 
 const PACK_SLUG = "pack-integral"
-const PACK_ARCHIVE = "Guides psychologiques - Pack intégral.rar" // placé dans /public/
+const PACK_ARCHIVE = "Guides psychologiques - Pack intégral.rar" // dans /public/
 
 const files: Record<string, string> = {
   "introduction-aux-guides": "Introduction aux guides.pdf",
@@ -26,19 +26,25 @@ const files: Record<string, string> = {
   "hauts-potentiels": "Hauts Potentiels - guide psychologique & pratique.pdf",
 }
 
-function mimeForArchive(filename: string): string {
-  const lower = filename.toLowerCase()
-  if (lower.endsWith(".zip")) return "application/zip"
-  if (lower.endsWith(".rar")) return "application/octet-stream"
-  return "application/octet-stream"
+function mimeForArchive(name: string) {
+  return name.toLowerCase().endsWith(".zip") ? "application/zip" : "application/octet-stream"
 }
-
 function contentDisposition(filename: string) {
   const ascii = filename.replace(/[^\x20-\x7E]/g, "_")
-  const utf8 = encodeURIComponent(filename)
-    .replace(/['()]/g, c => `%${c.charCodeAt(0).toString(16).toUpperCase()}`)
-    .replace(/\*/g, "%2A")
+  const utf8 = encodeURIComponent(filename).replace(/['()]/g, c => `%${c.charCodeAt(0).toString(16).toUpperCase()}`).replace(/\*/g, "%2A")
   return `attachment; filename="${ascii}"; filename*=UTF-8''${utf8}`
+}
+
+async function streamFile(absPath: string, displayName: string, type: string) {
+  const stat = await fsp.stat(absPath)
+  const stream = fs.createReadStream(absPath)
+  const h = new Headers()
+  h.set("Content-Type", type)
+  h.set("Content-Length", String(stat.size))
+  h.set("Accept-Ranges", "bytes")
+  h.set("Cache-Control", "no-store, private")
+  h.set("Content-Disposition", contentDisposition(displayName))
+  return new Response(stream as unknown as ReadableStream, { status: 200, headers: h })
 }
 
 export async function GET(req: Request) {
@@ -46,64 +52,44 @@ export async function GET(req: Request) {
     const url = new URL(req.url)
     const sessionId = url.searchParams.get("session_id") || ""
     const slug = url.searchParams.get("slug") || ""
-    if (!sessionId || !slug) return NextResponse.json({ error: "bad_request" }, { status: 400 })
+    if (!slug) return NextResponse.json({ error: "bad_request" }, { status: 400 })
 
-    // 1) Session Stripe payée
+    // BYPASS TEST contrôlé: ALLOW_PACK_TEST=1 permet de tester le pack sans Stripe
+    if (process.env.ALLOW_PACK_TEST === "1" && slug === PACK_SLUG) {
+      const p = path.join(process.cwd(), "public", PACK_ARCHIVE)
+      return streamFile(p, PACK_ARCHIVE, mimeForArchive(PACK_ARCHIVE))
+    }
+
+    if (!sessionId) return NextResponse.json({ error: "missing_session_id" }, { status: 400 })
+
+    // Vérif Stripe
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string)
     const s = await stripe.checkout.sessions.retrieve(sessionId, { expand: ["line_items.data.price.product"] })
     if (!s || s.payment_status !== "paid") {
-      return NextResponse.json(
-        { error: "stripe_session_invalid", detail: s?.payment_status ?? null },
-        { status: 403 }
-      )
+      return NextResponse.json({ error: "stripe_session_invalid", detail: s?.payment_status ?? null }, { status: 403 })
     }
 
-    // 2) Vérifier que l'article demandé est bien dans la session
     const hasItem = (s.line_items?.data ?? []).some(li => {
       const product = li.price?.product
       const prod = typeof product === "string" ? undefined : (product as Stripe.Product | undefined)
       const metaSlug = prod?.metadata?.slug ?? ""
       const name = (prod?.name ?? "").toLowerCase()
       if (slug === PACK_SLUG) {
-        // tolérance pour le pack
-        return (
-          metaSlug === PACK_SLUG ||
-          metaSlug === "pack" ||
-          metaSlug === "pack-integral-winrar" ||
-          name.includes("pack intégral") ||
-          name.includes("pack integral")
-        )
+        return metaSlug === "pack-integral" || metaSlug === "pack" || metaSlug === "pack-integral-winrar" || name.includes("pack intégral") || name.includes("pack integral")
       }
       return metaSlug === slug
     })
     if (!hasItem) return NextResponse.json({ error: "item_not_in_session" }, { status: 403 })
 
-    // 3) Streaming depuis /public
     if (slug === PACK_SLUG) {
       const p = path.join(process.cwd(), "public", PACK_ARCHIVE)
-      const st = await fsp.stat(p)
-      const stream = fs.createReadStream(p)
-      const h = new Headers()
-      h.set("Content-Type", mimeForArchive(PACK_ARCHIVE))
-      h.set("Content-Length", String(st.size))
-      h.set("Accept-Ranges", "bytes")
-      h.set("Cache-Control", "no-store, private")
-      h.set("Content-Disposition", contentDisposition(PACK_ARCHIVE))
-      return new Response(stream as unknown as ReadableStream, { status: 200, headers: h })
+      return streamFile(p, PACK_ARCHIVE, mimeForArchive(PACK_ARCHIVE))
     }
 
     const fname = files[slug]
     if (!fname) return NextResponse.json({ error: "file_not_mapped" }, { status: 404 })
     const fp = path.join(process.cwd(), "public", fname)
-    const st = await fsp.stat(fp)
-    const stream = fs.createReadStream(fp)
-    const h = new Headers()
-    h.set("Content-Type", "application/pdf")
-    h.set("Content-Length", String(st.size))
-    h.set("Accept-Ranges", "bytes")
-    h.set("Cache-Control", "no-store, private")
-    h.set("Content-Disposition", contentDisposition(fname))
-    return new Response(stream as unknown as ReadableStream, { status: 200, headers: h })
+    return streamFile(fp, fname, "application/pdf")
   } catch (e) {
     const msg = e instanceof Error ? e.message : "download_error"
     return NextResponse.json({ error: "download_error", detail: msg }, { status: 500 })

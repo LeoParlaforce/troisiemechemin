@@ -1,3 +1,4 @@
+// src/app/checkout/success/SuccessClient.tsx
 "use client"
 
 import { useEffect, useMemo, useState } from "react"
@@ -71,17 +72,19 @@ export default function SuccessClient() {
     return products.filter(p => p.slug !== slug).slice(0, 6)
   }, [slug])
 
-  async function handleDownload() {
-    if (!slug) return
-    const link = document.createElement("a")
-    link.href = `/boutique/${slug}?download=1`
-    link.download = `${slug}.pdf`
-    link.click()
-  }
+  // URL de téléchargement via l'API (inclut session_id + slug)
+  const downloadHref = slug && sid
+    ? `/api/download?session_id=${encodeURIComponent(sid)}&slug=${encodeURIComponent(slug)}`
+    : ""
 
   return (
     <main className="max-w-5xl mx-auto px-6 py-16 text-foreground">
       <h1 className="text-3xl font-bold">Paiement confirmé</h1>
+
+      {!sid && (
+        <p className="mt-2 text-sm opacity-80">Paramètre manquant: session_id.</p>
+      )}
+
       {email && (
         <p className="mt-2 opacity-80">
           Confirmation envoyée à <span className="font-medium">{email}</span>.
@@ -106,15 +109,16 @@ export default function SuccessClient() {
         </div>
       )}
 
-      {/* E-book : vrai téléchargement */}
-      {!track && slug && (
+      {/* E-book / Pack : vrai téléchargement via /api/download */}
+      {!track && slug && sid && (
         <div className="mt-8">
-          <button
-            onClick={handleDownload}
+          <a
+            href={downloadHref}
             className="rounded-md bg-purple-600 text-white px-4 py-2 text-sm hover:bg-purple-700 transition"
           >
             Télécharger maintenant
-          </button>
+          </a>
+          <p className="mt-2 text-xs opacity-60">Si rien ne démarre, clic droit → “Enregistrer le lien sous…”.</p>
         </div>
       )}
 

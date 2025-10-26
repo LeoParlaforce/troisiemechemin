@@ -25,16 +25,21 @@ async function countActiveFor(track: TrackId): Promise<number> {
   let count = 0
   let next_page: string | null = null
   do {
-    const res = await stripe.subscriptions.search({ query, limit: 100, page: next_page ?? undefined })
+    const res = await stripe.subscriptions.search({
+      query,
+      limit: 100,
+      page: next_page ?? undefined,
+    }) as Stripe.ApiSearchResult<Stripe.Subscription>
     count += res.data.length
-    next_page = (res as any).next_page || null
+    next_page = res.next_page
     if (count >= CAP) return count
   } while (next_page)
   return count
 }
 
 export async function POST(req: Request) {
-  const { track } = (await req.json().catch(() => ({}))) as { track?: TrackId }
+  const body = (await req.json().catch(() => ({}))) as Partial<{ track: TrackId }>
+  const track = body.track
   if (track !== "t1-fr" && track !== "t2-fr") {
     return NextResponse.json({ error: "invalid_track" }, { status: 400 })
   }
@@ -45,7 +50,8 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "track_full", track, used, cap: CAP }, { status: 409 })
   }
 
-  const origin = process.env.NEXT_PUBLIC_SITE_URL || new URL(req.url).origin
+  const originEnv = process.env.NEXT_PUBLIC_SITE_URL
+  const origin = originEnv ? originEnv.replace(/\/+$/, "") : new URL(req.url).origin
   const eur = Number(process.env.GROUP_PRICE_EUR_CENTS || "0")
   if (!eur) return NextResponse.json({ error: "price_missing" }, { status: 500 })
 

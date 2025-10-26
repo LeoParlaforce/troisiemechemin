@@ -9,7 +9,7 @@ export const runtime = "nodejs"
 export const dynamic = "force-dynamic"
 
 const PACK_SLUG = "pack-integral"
-const PACK_ARCHIVE = "Guides psychologiques - Pack intégral.rar" // /private/pdfs
+const PACK_ARCHIVE = "Guides psychologiques - Pack intégral.rar" // présent dans /public/
 
 const files: Record<string, string> = {
   "introduction-aux-guides": "Introduction aux guides.pdf",
@@ -29,14 +29,15 @@ const files: Record<string, string> = {
 function mimeForArchive(filename: string): string {
   const lower = filename.toLowerCase()
   if (lower.endsWith(".zip")) return "application/zip"
-  if (lower.endsWith(".rar")) return "application/octet-stream" // plus compatible
+  if (lower.endsWith(".rar")) return "application/octet-stream"
   return "application/octet-stream"
 }
 
 function contentDisposition(filename: string) {
-  // Fallback ASCII + RFC5987 pour les caractères non ASCII
   const asciiFallback = filename.replace(/[^\x20-\x7E]/g, "_")
-  const utf8 = encodeURIComponent(filename).replace(/['()]/g, c => `%${c.charCodeAt(0).toString(16).toUpperCase()}`).replace(/\*/g, "%2A")
+  const utf8 = encodeURIComponent(filename)
+    .replace(/['()]/g, c => `%${c.charCodeAt(0).toString(16).toUpperCase()}`)
+    .replace(/\*/g, "%2A")
   return `attachment; filename="${asciiFallback}"; filename*=UTF-8''${utf8}`
 }
 
@@ -64,10 +65,9 @@ export async function GET(req: Request) {
     })
     if (!ok) return NextResponse.json({ error: "item_not_in_session" }, { status: 403 })
 
-    // Pack -> stream .rar
+    // Pack -> stream depuis /public
     if (slug === PACK_SLUG) {
-      const archPath = path.join(process.cwd(), "private", "pdfs", PACK_ARCHIVE)
-      // Vérifie l’existence et la taille
+      const archPath = path.join(process.cwd(), "public", PACK_ARCHIVE)
       const stat = await fsp.stat(archPath)
       const stream = fs.createReadStream(archPath)
 
@@ -81,11 +81,11 @@ export async function GET(req: Request) {
       return new NextResponse(stream as unknown as ReadableStream, { status: 200, headers })
     }
 
-    // PDF unitaire
+    // PDF unitaire depuis /public
     const fname = files[slug]
     if (!fname) return NextResponse.json({ error: "file_not_mapped" }, { status: 404 })
 
-    const filePath = path.join(process.cwd(), "private", "pdfs", fname)
+    const filePath = path.join(process.cwd(), "public", fname)
     const stat = await fsp.stat(filePath)
     const stream = fs.createReadStream(filePath)
 

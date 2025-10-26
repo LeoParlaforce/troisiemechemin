@@ -1,13 +1,15 @@
 // src/app/api/download/route.ts
 import { NextResponse } from "next/server"
 import Stripe from "stripe"
-import fs from "node:fs/promises"
+import fs from "node:fs"
+import fsp from "node:fs/promises"
 import path from "node:path"
 
 export const runtime = "nodejs"
+export const dynamic = "force-dynamic"
 
 const PACK_SLUG = "pack-integral"
-const PACK_ARCHIVE = "Guides psychologiques - Pack intégral.rar" // fichier dans /private/pdfs
+const PACK_ARCHIVE = "Guides psychologiques - Pack intégral.rar" // /private/pdfs
 
 const files: Record<string, string> = {
   "introduction-aux-guides": "Introduction aux guides.pdf",
@@ -27,8 +29,15 @@ const files: Record<string, string> = {
 function mimeForArchive(filename: string): string {
   const lower = filename.toLowerCase()
   if (lower.endsWith(".zip")) return "application/zip"
-  if (lower.endsWith(".rar")) return "application/x-rar-compressed"
+  if (lower.endsWith(".rar")) return "application/octet-stream" // plus compatible
   return "application/octet-stream"
+}
+
+function contentDisposition(filename: string) {
+  // Fallback ASCII + RFC5987 pour les caractères non ASCII
+  const asciiFallback = filename.replace(/[^\x20-\x7E]/g, "_")
+  const utf8 = encodeURIComponent(filename).replace(/['()]/g, c => `%${c.charCodeAt(0).toString(16).toUpperCase()}`).replace(/\*/g, "%2A")
+  return `attachment; filename="${asciiFallback}"; filename*=UTF-8''${utf8}`
 }
 
 export async function GET(req: Request) {
@@ -55,18 +64,21 @@ export async function GET(req: Request) {
     })
     if (!ok) return NextResponse.json({ error: "item_not_in_session" }, { status: 403 })
 
-    // Pack -> archive .rar
+    // Pack -> stream .rar
     if (slug === PACK_SLUG) {
       const archPath = path.join(process.cwd(), "private", "pdfs", PACK_ARCHIVE)
-      const buf = await fs.readFile(archPath)
-      return new Response(new Uint8Array(buf), {
-        status: 200,
-        headers: {
-          "Content-Type": mimeForArchive(PACK_ARCHIVE),
-          "Content-Disposition": `attachment; filename="${PACK_ARCHIVE}"`,
-          "Cache-Control": "no-store",
-        },
-      })
+      // Vérifie l’existence et la taille
+      const stat = await fsp.stat(archPath)
+      const stream = fs.createReadStream(archPath)
+
+      const headers = new Headers()
+      headers.set("Content-Type", mimeForArchive(PACK_ARCHIVE))
+      headers.set("Content-Length", String(stat.size))
+      headers.set("Accept-Ranges", "bytes")
+      headers.set("Cache-Control", "no-store, private")
+      headers.set("Content-Disposition", contentDisposition(PACK_ARCHIVE))
+
+      return new NextResponse(stream as unknown as ReadableStream, { status: 200, headers })
     }
 
     // PDF unitaire
@@ -74,16 +86,17 @@ export async function GET(req: Request) {
     if (!fname) return NextResponse.json({ error: "file_not_mapped" }, { status: 404 })
 
     const filePath = path.join(process.cwd(), "private", "pdfs", fname)
-    const pdf = await fs.readFile(filePath)
+    const stat = await fsp.stat(filePath)
+    const stream = fs.createReadStream(filePath)
 
-    return new Response(new Uint8Array(pdf), {
-      status: 200,
-      headers: {
-        "Content-Type": "application/pdf",
-        "Content-Disposition": `attachment; filename="${fname}"`,
-        "Cache-Control": "no-store",
-      },
-    })
+    const headers = new Headers()
+    headers.set("Content-Type", "application/pdf")
+    headers.set("Content-Length", String(stat.size))
+    headers.set("Accept-Ranges", "bytes")
+    headers.set("Cache-Control", "no-store, private")
+    headers.set("Content-Disposition", contentDisposition(fname))
+
+    return new NextResponse(stream as unknown as ReadableStream, { status: 200, headers })
   } catch (e: unknown) {
     const msg = e instanceof Error ? e.message : "download_error"
     return NextResponse.json({ error: "download_error", detail: msg }, { status: 500 })

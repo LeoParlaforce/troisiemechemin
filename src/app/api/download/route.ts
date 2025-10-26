@@ -44,22 +44,23 @@ async function streamFile(p: string, name: string, type: string) {
   h.set("Content-Disposition", contentDisposition(name))
   return new Response(s as unknown as ReadableStream, { status: 200, headers: h })
 }
-
-function normalizeSlug(raw: string): { slug: string; isPack: boolean } {
-  const r = raw.toLowerCase()
-  const isPack = r === "pack-integral" || r === "pack-integral-winrar" || r === "pack"
-  return { slug: isPack ? PACK_SLUG : raw, isPack }
+function normalizeSlug(raw: string): { norm: string; isPack: boolean; debug: string } {
+  const dec = decodeURIComponent(raw || "").trim().toLowerCase()
+  const noAcc = dec.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+  const slug = noAcc.replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "")
+  const isPack = slug.includes("pack") && slug.includes("integral")
+  return { norm: isPack ? PACK_SLUG : slug, isPack, debug: slug }
 }
 
 export async function GET(req: Request) {
   try {
     const url = new URL(req.url)
     const rawSlug = url.searchParams.get("slug") || ""
+    const { norm: slug, isPack, debug } = normalizeSlug(rawSlug)
     const sessionId = url.searchParams.get("session_id") || ""
     const diag = url.searchParams.get("diag") === "1"
-    if (!rawSlug) return NextResponse.json({ error: "bad_request" }, { status: 400 })
 
-    const { slug, isPack } = normalizeSlug(rawSlug)
+    if (!slug) return NextResponse.json({ error: "bad_request" }, { status: 400 })
 
     // Bypass test: /api/download?slug=pack-integral&diag=1
     if (diag && isPack) {
@@ -76,19 +77,22 @@ export async function GET(req: Request) {
       return NextResponse.json({ error: "stripe_session_invalid", detail: s?.payment_status ?? null }, { status: 403 })
     }
 
-    // Autorisation: pack accepté dès que session payée
-    let authorized = false
-    if (isPack) {
-      authorized = true
-    } else {
+    // Autorisation:
+    // - PACK: autorisé si session payée (peu importe line_items)
+    // - AUTRES: vérifier que metadata.slug correspond
+    let authorized = isPack
+    if (!authorized) {
       authorized = (s.line_items?.data ?? []).some(li => {
         const product = li.price?.product
         const prod = typeof product === "string" ? undefined : (product as Stripe.Product | undefined)
-        const meta = prod?.metadata?.slug ?? ""
-        return meta === slug
+        const meta = (prod?.metadata?.slug || "").toString().trim().toLowerCase()
+        const metaNorm = normalizeSlug(meta).norm
+        return metaNorm === slug
       })
     }
-    if (!authorized) return NextResponse.json({ error: "item_not_in_session" }, { status: 403 })
+    if (!authorized) {
+      return NextResponse.json({ error: "item_not_in_session", requested: slug, normalized_from: debug }, { status: 403 })
+    }
 
     // Envoi
     if (isPack) {
@@ -97,7 +101,7 @@ export async function GET(req: Request) {
     }
 
     const fname = files[slug]
-    if (!fname) return NextResponse.json({ error: "file_not_mapped" }, { status: 404 })
+    if (!fname) return NextResponse.json({ error: "file_not_mapped", requested: slug }, { status: 404 })
     const fp = path.join(process.cwd(), "public", fname)
     return streamFile(fp, fname, "application/pdf")
   } catch (e) {

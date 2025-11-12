@@ -30,7 +30,9 @@ function mimeForArchive(n: string) {
 }
 function contentDisposition(filename: string) {
   const ascii = filename.replace(/[^\x20-\x7E]/g, "_")
-  const utf8 = encodeURIComponent(filename).replace(/['()]/g, c => `%${c.charCodeAt(0).toString(16).toUpperCase()}`).replace(/\*/g, "%2A")
+  const utf8 = encodeURIComponent(filename)
+    .replace(/['()]/g, c => `%${c.charCodeAt(0).toString(16).toUpperCase()}`)
+    .replace(/\*/g, "%2A")
   return `attachment; filename="${ascii}"; filename*=UTF-8''${utf8}`
 }
 async function streamFile(p: string, name: string, type: string) {
@@ -56,6 +58,7 @@ export async function GET(req: Request) {
   try {
     const url = new URL(req.url)
     const rawSlug = url.searchParams.get("slug") || ""
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { norm: slug, isPack, debug } = normalizeSlug(rawSlug)
     const sessionId = url.searchParams.get("session_id") || ""
     const diag = url.searchParams.get("diag") === "1"
@@ -80,13 +83,12 @@ export async function GET(req: Request) {
     // Autorisation:
     // - PACK: autorisé si session payée (peu importe line_items)
     // - AUTRES: vérifier que metadata.slug correspond
-let authorized = isPack
-if (!authorized) {
-  const name = (s.line_items?.data?.[0]?.description || "").toLowerCase()
-  const normName = normalizeSlug(name).norm
-  authorized = normName === slug
-}
-
+    let authorized = isPack
+    if (!authorized) {
+      const name = (s.line_items?.data?.[0]?.description || "").toLowerCase()
+      const normName = normalizeSlug(name).norm
+      authorized = normName === slug
+    }
 
     // Envoi
     if (isPack) {

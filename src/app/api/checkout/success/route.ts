@@ -32,8 +32,9 @@ export async function GET(req: Request) {
 
   // --- récupération du slug depuis metadata produit Stripe
   if (line?.price?.product && typeof line.price.product !== "string") {
-    const metaSlug = (line.price.product as any)?.metadata?.slug
-    if (metaSlug) slug = metaSlug
+    const product = line.price.product as Stripe.Product
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    slug = (product.metadata as any)?.slug || null
   }
 
   // --- fallback sur description

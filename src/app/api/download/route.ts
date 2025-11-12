@@ -8,7 +8,7 @@ export const runtime = "nodejs"
 export const dynamic = "force-dynamic"
 
 const PACK_SLUG = "pack-integral"
-const PACK_ARCHIVE = "Guides psychologiques - Pack intégral.rar" // dans /public/
+const PACK_ARCHIVE = "Guides psychologiques - Pack intégral.rar" // dans /private/pdfs
 
 const files: Record<string, string> = {
   "introduction-aux-guides": "Introduction aux guides.pdf",
@@ -57,9 +57,8 @@ function normalizeSlug(raw: string): { norm: string; isPack: boolean; debug: str
 export async function GET(req: Request) {
   try {
     const url = new URL(req.url)
-    const rawSlug = url.searchParams.get("slug") || ""
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { norm: slug, isPack, debug } = normalizeSlug(rawSlug)
+    const { norm: slug, isPack, debug } = normalizeSlug(url.searchParams.get("slug") || "")
     const sessionId = url.searchParams.get("session_id") || ""
     const diag = url.searchParams.get("diag") === "1"
 
@@ -67,7 +66,7 @@ export async function GET(req: Request) {
 
     // Bypass test: /api/download?slug=pack-integral&diag=1
     if (diag && isPack) {
-      const p = path.join(process.cwd(), "public", PACK_ARCHIVE)
+      const p = path.join(process.cwd(), "private/pdfs", PACK_ARCHIVE)
       return streamFile(p, PACK_ARCHIVE, mimeForArchive(PACK_ARCHIVE))
     }
 
@@ -92,15 +91,16 @@ export async function GET(req: Request) {
 
     // Envoi
     if (isPack) {
-      const p = path.join(process.cwd(), "public", PACK_ARCHIVE)
+      const p = path.join(process.cwd(), "private/pdfs", PACK_ARCHIVE)
       return streamFile(p, PACK_ARCHIVE, mimeForArchive(PACK_ARCHIVE))
     }
 
     const fname = files[slug]
     if (!fname) return NextResponse.json({ error: "file_not_mapped", requested: slug }, { status: 404 })
-    const fp = path.join(process.cwd(), "public", fname)
+    const fp = path.join(process.cwd(), "private/pdfs", fname)
     return streamFile(fp, fname, "application/pdf")
   } catch (e) {
+    console.error("Download error:", e)
     const msg = e instanceof Error ? e.message : "download_error"
     return NextResponse.json({ error: "download_error", detail: msg }, { status: 500 })
   }

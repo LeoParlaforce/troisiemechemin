@@ -17,7 +17,7 @@ export async function GET(req: Request) {
   if (!id) return NextResponse.json({ error: "missing_session_id" }, { status: 400 })
 
   const s = await stripe.checkout.sessions.retrieve(id, {
-    expand: ["subscription", "customer", "line_items"],
+    expand: ["subscription", "customer", "line_items.data.price.product"],
   })
 
   const track =
@@ -27,11 +27,19 @@ export async function GET(req: Request) {
 
   const email = s.customer_details?.email || null
 
-  const li = s.line_items?.data?.[0]
-  const slug =
-    (li?.description
-      ? li.description.toLowerCase().replace(/\s+/g, "-")
-      : null) || null
+  let slug: string | null = null
+  const line = s.line_items?.data?.[0]
+
+  // --- récupération du slug depuis metadata produit Stripe
+  if (line?.price?.product && typeof line.price.product !== "string") {
+    const metaSlug = (line.price.product as any)?.metadata?.slug
+    if (metaSlug) slug = metaSlug
+  }
+
+  // --- fallback sur description
+  if (!slug && line?.description) {
+    slug = line.description.toLowerCase().replace(/\s+/g, "-")
+  }
 
   const res = NextResponse.json({ track, email, slug }, { status: 200 })
 

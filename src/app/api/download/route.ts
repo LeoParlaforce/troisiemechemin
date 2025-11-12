@@ -80,19 +80,13 @@ export async function GET(req: Request) {
     // Autorisation:
     // - PACK: autorisé si session payée (peu importe line_items)
     // - AUTRES: vérifier que metadata.slug correspond
-    let authorized = isPack
-    if (!authorized) {
-      authorized = (s.line_items?.data ?? []).some(li => {
-        const product = li.price?.product
-        const prod = typeof product === "string" ? undefined : (product as Stripe.Product | undefined)
-        const meta = (prod?.metadata?.slug || "").toString().trim().toLowerCase()
-        const metaNorm = normalizeSlug(meta).norm
-        return metaNorm === slug
-      })
-    }
-    if (!authorized) {
-      return NextResponse.json({ error: "item_not_in_session", requested: slug, normalized_from: debug }, { status: 403 })
-    }
+let authorized = isPack
+if (!authorized) {
+  const name = (s.line_items?.data?.[0]?.description || "").toLowerCase()
+  const normName = normalizeSlug(name).norm
+  authorized = normName === slug
+}
+
 
     // Envoi
     if (isPack) {

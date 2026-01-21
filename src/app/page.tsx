@@ -1,3 +1,4 @@
+import Link from "next/link"
 import Image from "next/image"
 
 export default function Home() {
@@ -14,14 +15,14 @@ export default function Home() {
               Accompagnement psychologique et guides pratiques en ligne.
             </p>
             <div className="mt-10 flex flex-wrap gap-4">
-              <a
+              <Link
                 href="/boutique"
                 className="rounded-md bg-accent px-6 py-3 text-white text-base font-medium
                            transition transform-gpu hover:-translate-y-1 hover:scale-[1.02] hover:shadow-lg
                            focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
               >
                 Découvrir les guides
-              </a>
+              </Link>
             </div>
           </div>
 
@@ -44,7 +45,7 @@ export default function Home() {
 
         <div className="mt-8 grid gap-6 md:grid-cols-3">
           {/* Guides */}
-          <a
+          <Link
             href="/boutique"
             aria-label="Voir les guides complets"
             className="group block rounded-xl border overflow-hidden transition
@@ -63,23 +64,22 @@ export default function Home() {
                 Guides complets
               </h3>
               <p className="mt-2 text-base opacity-80">
-                E-books PDF : estime de soi, anxiété, dépression, relations,
-                sommeil, TDAH, TSA, créativité, haut potentiel.
+                E-books PDF : estime de soi, anxiété, dépression, relations, sommeil, TDAH, TSA, créativité, haut potentiel.
               </p>
             </div>
-          </a>
+          </Link>
 
-          <article className="rounded-xl border p-6">
+          <article className="rounded-xl border p-6 transition hover:shadow-md hover:border-accent/50">
             <h3 className="text-lg font-semibold">Approche humaniste</h3>
-            <p className="mt-2 opacity-80">
-              Une psychologie sans jugement, orientée sens et autonomie.
+            <p className="mt-2 text-base opacity-80">
+              Une psychologie sans jugement, centrée sur le sens, le désir et l’expérience vécue.
             </p>
           </article>
 
-          <article className="rounded-xl border p-6">
-            <h3 className="text-lg font-semibold">Vision</h3>
-            <p className="mt-2 opacity-80">
-              Comprendre son monde intérieur pour redevenir acteur de sa vie.
+          <article className="rounded-xl border p-6 transition hover:shadow-md hover:border-accent/50">
+            <h3 className="text-lg font-semibold">Autonomie psychique</h3>
+            <p className="mt-2 text-base opacity-80">
+              Comprendre son fonctionnement pour devenir acteur de sa transformation.
             </p>
           </article>
         </div>

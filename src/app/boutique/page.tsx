@@ -1,6 +1,6 @@
-// app/boutique/page.tsx
 import Image from "next/image"
 import { products } from "./data"
+import Link from "next/link"
 
 export default function Boutique() {
   return (
@@ -12,15 +12,11 @@ export default function Boutique() {
           La psychologie n&apos;est pas qu&apos;un corpus théorique, elle est surtout intéressante dans sa pratique.
           Elle est une lecture dont l&apos;intérêt en est l&apos;application dans votre vie de tous les jours.
           Portez un regard différent, soignez votre monde.
-          <br />
-          <span className="text-sm opacity-60">
-            Inscrit à un groupe ? Tarifs membres : guides 5 €, pack 29 €.
-          </span>
         </p>
 
         <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {products.map((p) => (
-            <a
+            <Link
               key={p.slug}
               href={`/boutique/${p.slug}`}
               className="group block relative overflow-hidden rounded-xl border bg-white/50 backdrop-blur transition duration-200 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-600"
@@ -65,7 +61,7 @@ export default function Boutique() {
                 </div>
                 <span className="text-sm opacity-70 group-hover:opacity-100">Voir</span>
               </div>
-            </a>
+            </Link>
           ))}
         </div>
       </section>

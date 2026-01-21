@@ -26,8 +26,6 @@ export default async function ProductPage({ params }: PageProps) {
   const p = getProductBySlug(slug)
   if (!p) return notFound()
 
-  const anchorFR = p.group === "t1" ? "#t1-fr" : "#t2-fr"
-
   return (
     <main className="min-h-screen text-foreground">
       <section className="mx-auto max-w-6xl px-6 py-12 grid gap-10 md:grid-cols-2 md:items-start">
@@ -53,13 +51,6 @@ export default async function ProductPage({ params }: PageProps) {
 
           <div className="mt-8 flex flex-wrap gap-3">
             <BuyButton slug={p.slug} title={p.title} image={p.image} />
-            {/* lien interne volontaire en <a> */}
-            <a
-              href={`/therapies-groupe${anchorFR}`}
-              className="rounded-md border px-6 py-3 text-base transition hover:border-accent hover:text-accent"
-            >
-              Rejoindre le groupe (FR)
-            </a>
           </div>
 
           <p className="mt-6 text-sm opacity-70">Format PDF. Lecture ordinateur et mobile. Mises à jour incluses.</p>

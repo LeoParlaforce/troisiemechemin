@@ -26,7 +26,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 troisiemechemin.fr
               </a>
 
-              {/* Icônes sociales colorées */}
+              {/* Icônes sociales */}
               <div className="flex gap-3 items-center">
                 <a aria-label="YouTube" href="https://www.youtube.com/@TroisiemeChemin" target="_blank" rel="noopener noreferrer" className="transition hover:opacity-80">
                   <svg viewBox="0 0 24 24" className="h-5 w-5" xmlns="http://www.w3.org/2000/svg">
@@ -36,7 +36,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
                 <a aria-label="Instagram" href="https://www.instagram.com/troisiemechemin/" target="_blank" rel="noopener noreferrer" className="transition hover:opacity-80">
                   <svg viewBox="0 0 24 24" className="h-5 w-5" xmlns="http://www.w3.org/2000/svg">
-                    <path fill="#E4405F" d="M12 2.163c3.204 0 3.584.012 4.85.07 1.366.062 2.633.332 3.608 1.308.975.975 1.245 2.242 1.308 3.608.058 1.266.069 1.646.069 4.85s-.011 3.584-.069 4.85c-.063 1.366-.333 2.633-1.308 3.608-.975.975-2.242 1.245-3.608 1.308-1.266.058-1.646.069-4.85.069s-3.584-.011-4.85-.069c-1.366-.063-2.633-.333-3.608-1.308-.975-.975-1.245-2.242-1.308-3.608C2.175 15.584 2.163 15.204 2.163 12s.012-3.584.07-4.85c.062-1.366.332-2.633 1.308-3.608.975-.975 2.242-1.245 3.608-1.308C8.416 2.175 8.796 2.163 12 2.163zm0 5.527a4.31 4.31 0 1 0 0 8.62 4.31 4.31 0 0 0 0-8.62zm6.456-2.622a1.386 1.386 0 1 0 0 2.772 1.386 1.386 0 0 0 0-2.772z"/>
+                    <path fill="#E4405F" d="M12 2.163c3.204 0 3.584.012 4.85.07 1.366.062 2.633.332 3.608 1.308.975.975 1.245 2.242 1.308 3.608.058 1.266.069 1.646.069 4.85s-.011 3.584-.069 4.85c-.063 1.366-.333 2.633-1.308 3.608-.975.975-2.242 1.245-3.608 1.308-1.266.058-1.646.069-4.85.069s-3.584-.011-4.85-.069c-1.366-.063-2.633-.333-3.608-1.308-.975-.975-1.245-2.242-1.308-3.608C2.175 15.584 2.163 15.204 2.163 12s.012-3.584.07-4.85c.062-1.366.332-2.633 1.308-3.608.975-.975 2.242-1.245 3.608-1.308C8.416 2.175 8.796 2.163 12 2.163z"/>
                   </svg>
                 </a>
 
@@ -58,7 +58,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               {[
                 { href: "/", label: "Accueil" },
                 { href: "/boutique", label: "Boutique" },
-                { href: "/therapies-groupe", label: "Groupes de parole" },
               ].map((l) => (
                 <a
                   key={l.href}

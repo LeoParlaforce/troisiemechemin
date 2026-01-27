@@ -2,24 +2,22 @@
 
 import { useEffect, useState } from 'react'
 
-type Message = {
-  id: string
-  content: string
-  created_at: string
-}
-
 export default function ChatPage() {
-  const [messages, setMessages] = useState<Message[]>([])
+  const [messages, setMessages] = useState<any[]>([])
   const [content, setContent] = useState('')
 
   useEffect(() => {
-    fetch('/api/messages')
-      .then(res => res.json())
-      .then(setMessages)
+    loadMessages()
   }, [])
 
+  async function loadMessages() {
+    const res = await fetch('/api/messages')
+    const data = await res.json()
+    setMessages(data)
+  }
+
   async function sendMessage() {
-    if (!content) return
+    if (content.trim() === '') return
 
     await fetch('/api/messages', {
       method: 'POST',
@@ -31,23 +29,23 @@ export default function ChatPage() {
     })
 
     setContent('')
-
-    const res = await fetch('/api/messages')
-    setMessages(await res.json())
+    loadMessages()
   }
 
   return (
     <div style={{ padding: 20 }}>
       <div>
-        {messages.map(m => (
-          <div key={m.id}>{m.content}</div>
+        {messages.map((m, i) => (
+          <div key={i}>{m.content}</div>
         ))}
       </div>
 
       <input
         value={content}
         onChange={e => setContent(e.target.value)}
+        style={{ border: '1px solid black' }}
       />
+
       <button onClick={sendMessage}>Envoyer</button>
     </div>
   )

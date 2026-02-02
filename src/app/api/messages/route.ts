@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
 
     const { data, error } = await supabase
       .from('messages')
-      .insert([{ content }])
+      .insert([{ content, role: 'user' }]) // <-- rôle ajouté pour éviter le NOT NULL
       .select()
 
     if (error) {

@@ -19,15 +19,15 @@ export async function GET() {
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json()
-    const { content, user_id } = body
+    const { content } = body
 
-    if (!content || !user_id) {
-      return NextResponse.json({ error: 'Missing content or user_id' }, { status: 400 })
+    if (!content) {
+      return NextResponse.json({ error: 'Missing content' }, { status: 400 })
     }
 
     const { data, error } = await supabase
       .from('messages')
-      .insert([{ content, user_id }])
+      .insert([{ content }])
       .select()
 
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })

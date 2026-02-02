@@ -9,7 +9,7 @@ interface Message {
 }
 
 export default function ChatPage() {
-  const [userId, setUserId] = useState('')
+  const [userId, setUserId] = useState<string | null>(null)
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState('')
   const endRef = useRef<HTMLDivElement>(null)
@@ -43,15 +43,22 @@ export default function ChatPage() {
 
   // Envoie un message
   const sendMessage = async () => {
-    if (!input.trim()) return
+    if (!input.trim() || !userId) return
     try {
-      await fetch('/api/messages', {
+      const res = await fetch('/api/messages', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ content: input, role: 'user', user_id: userId })
+        body: JSON.stringify({ content: input.trim(), role: 'user', user_id: userId })
       })
+
+      if (!res.ok) {
+        const err = await res.json()
+        console.error('Error sending message:', err)
+        return
+      }
+
       setInput('')
-      fetchMessages()
+      await fetchMessages()
     } catch (err) {
       console.error(err)
     }

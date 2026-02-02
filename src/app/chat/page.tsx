@@ -14,7 +14,6 @@ export default function ChatPage() {
   const [input, setInput] = useState('')
   const endRef = useRef<HTMLDivElement>(null)
 
-  // Génère un userId unique côté client uniquement
   useEffect(() => {
     let id = localStorage.getItem('user_id')
     if (!id) {
@@ -29,10 +28,12 @@ export default function ChatPage() {
     try {
       const res = await fetch('/api/messages', { headers: { 'x-user-id': userId } })
       const data = await res.json()
-      setMessages(data || [])
+      // Vérification : si data n'est pas un tableau, on force tableau vide
+      setMessages(Array.isArray(data) ? data : [])
       endRef.current?.scrollIntoView({ behavior: 'smooth' })
     } catch (err) {
       console.error(err)
+      setMessages([])
     }
   }
 
@@ -62,7 +63,7 @@ export default function ChatPage() {
   return (
     <div style={{ maxWidth: 600, margin: '0 auto', padding: 20 }}>
       <div style={{ minHeight: 400, border: '1px solid #ccc', borderRadius: 8, padding: 10, overflowY: 'auto' }}>
-        {messages.map(m => (
+        {Array.isArray(messages) && messages.map(m => (
           <div key={m.id} style={{ textAlign: m.role === 'user' ? 'right' : 'left', margin: '5px 0' }}>
             <span
               style={{

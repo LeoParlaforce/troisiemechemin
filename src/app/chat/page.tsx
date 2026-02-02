@@ -9,34 +9,30 @@ interface Message {
 }
 
 export default function ChatPage() {
-  const [userId, setUserId] = useState<string>('')
+  const [userId, setUserId] = useState('')
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState('')
   const endRef = useRef<HTMLDivElement>(null)
 
-  // Génération safe de UUID côté client
+  // Génère un userId unique côté client uniquement
   useEffect(() => {
     let id = localStorage.getItem('user_id')
     if (!id) {
-      // crypto.randomUUID() peut planter sur certains navigateurs, on met fallback simple
       id = (Math.random() + 1).toString(36).substring(2, 15)
       localStorage.setItem('user_id', id)
     }
     setUserId(id)
   }, [])
 
-  // Récupère messages
   const fetchMessages = async () => {
     if (!userId) return
     try {
-      const res = await fetch('/api/messages', {
-        headers: { 'x-user-id': userId }
-      })
+      const res = await fetch('/api/messages', { headers: { 'x-user-id': userId } })
       const data = await res.json()
       setMessages(data || [])
       endRef.current?.scrollIntoView({ behavior: 'smooth' })
     } catch (err) {
-      console.error('Fetch messages error:', err)
+      console.error(err)
     }
   }
 
@@ -44,7 +40,6 @@ export default function ChatPage() {
     if (userId) fetchMessages()
   }, [userId])
 
-  // Envoi de message
   const sendMessage = async () => {
     if (!input.trim()) return
     try {
@@ -56,7 +51,7 @@ export default function ChatPage() {
       setInput('')
       fetchMessages()
     } catch (err) {
-      console.error('Send message error:', err)
+      console.error(err)
     }
   }
 

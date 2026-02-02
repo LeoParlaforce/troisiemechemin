@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 
 const supabase = createClient(
@@ -12,8 +12,8 @@ export async function GET() {
     .select('*')
     .order('created_at', { ascending: true })
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
-  return NextResponse.json(data)
+  if (error) return new Response(JSON.stringify({ error: error.message }), { status: 500 })
+  return new Response(JSON.stringify(data), { status: 200 })
 }
 
 export async function POST(req: NextRequest) {
@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
     const { content } = body
 
     if (!content) {
-      return NextResponse.json({ error: 'Missing content' }, { status: 400 })
+      return new Response(JSON.stringify({ error: 'Missing content' }), { status: 400 })
     }
 
     const { data, error } = await supabase
@@ -30,10 +30,14 @@ export async function POST(req: NextRequest) {
       .insert([{ content }])
       .select()
 
-    if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+    if (error) {
+      console.error('Supabase insert error:', error)
+      return new Response(JSON.stringify({ error: error.message }), { status: 500 })
+    }
 
-    return NextResponse.json(data)
+    return new Response(JSON.stringify(data), { status: 200 })
   } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500 })
+    console.error('POST exception:', err)
+    return new Response(JSON.stringify({ error: err.message }), { status: 500 })
   }
 }

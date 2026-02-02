@@ -47,7 +47,7 @@ export default function ChatPage() {
     try {
       const res = await fetch('/api/messages', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'x-user-id': userId },
         body: JSON.stringify({ content: input.trim(), role: 'user', user_id: userId })
       })
 
@@ -67,6 +67,9 @@ export default function ChatPage() {
   const handleKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') sendMessage()
   }
+
+  // Bloque l'input et le bouton tant que userId n'est pas défini
+  if (!userId) return <div>Chargement...</div>
 
   return (
     <div style={{ maxWidth: 600, margin: '0 auto', padding: 20 }}>

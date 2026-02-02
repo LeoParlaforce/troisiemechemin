@@ -1,81 +1,102 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
+
+interface Message {
+  id: number
+  content: string
+  role: 'user' | 'admin'
+}
 
 export default function ChatPage() {
-  const [messages, setMessages] = useState<any[]>([])
-  const [content, setContent] = useState('')
-  const [sending, setSending] = useState(false)
+  const [userId, setUserId] = useState('')
+  const [messages, setMessages] = useState<Message[]>([])
+  const [input, setInput] = useState('')
+  const endRef = useRef<HTMLDivElement>(null)
 
-  // Charge les messages depuis l'API
-  const loadMessages = async () => {
-    try {
-      const res = await fetch('/api/messages')
-      const data = await res.json()
-      setMessages(data)
-    } catch (err) {
-      console.error('loadMessages error:', err)
+  // Génère ou récupère userId unique
+  useEffect(() => {
+    let id = localStorage.getItem('user_id')
+    if (!id) {
+      id = crypto.randomUUID()
+      localStorage.setItem('user_id', id)
     }
+    setUserId(id)
+  }, [])
+
+  // Récupère les messages
+  const fetchMessages = async () => {
+    if (!userId) return
+    const res = await fetch('/api/messages', {
+      headers: { 'x-user-id': userId }
+    })
+    const data = await res.json()
+    setMessages(data || [])
+    endRef.current?.scrollIntoView({ behavior: 'smooth' })
   }
 
   useEffect(() => {
-    loadMessages()
-  }, [])
+    fetchMessages()
+  }, [userId])
 
-  // Envoie le message
-  const sendMessage = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!content.trim()) return
+  // Envoi de message
+  const sendMessage = async () => {
+    if (!input.trim()) return
+    await fetch('/api/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ content: input, role: 'user', user_id: userId })
+    })
+    setInput('')
+    fetchMessages()
+  }
 
-    setSending(true)
-    try {
-      const res = await fetch('/api/messages', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ content }),
-      })
-      const data = await res.json()
-      console.log('POST response:', data) // <-- log de l’erreur éventuelle
-      setContent('')
-      await loadMessages()
-    } catch (err) {
-      console.error('fetch error:', err)
-    } finally {
-      setSending(false)
-    }
+  const handleKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') sendMessage()
   }
 
   return (
-    <div style={{ padding: 20 }}>
-      <h2>Chat Test</h2>
-
-      <div
-        style={{
-          border: '1px solid black',
-          height: 300,
-          overflowY: 'auto',
-          marginBottom: 10,
-          padding: 5,
-        }}
-      >
-        {messages.length === 0 ? (
-          <div style={{ color: '#888' }}>Aucun message</div>
-        ) : (
-          messages.map((m, i) => <div key={i}>{m.content}</div>)
-        )}
+    <div style={{ maxWidth: 600, margin: '0 auto', padding: 20 }}>
+      <div style={{ minHeight: 400, border: '1px solid #ccc', borderRadius: 8, padding: 10, overflowY: 'auto' }}>
+        {messages.map(m => (
+          <div
+            key={m.id}
+            style={{
+              textAlign: m.role === 'user' ? 'right' : 'left',
+              margin: '5px 0'
+            }}
+          >
+            <span
+              style={{
+                display: 'inline-block',
+                padding: '8px 12px',
+                borderRadius: 16,
+                backgroundColor: m.role === 'user' ? '#4ade80' : '#f3f4f6',
+                color: m.role === 'user' ? '#000' : '#111'
+              }}
+            >
+              {m.content}
+            </span>
+          </div>
+        ))}
+        <div ref={endRef} />
       </div>
 
-      <form onSubmit={sendMessage} style={{ display: 'flex', gap: 5 }}>
+      <div style={{ display: 'flex', marginTop: 10 }}>
         <input
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-          placeholder="Écris un message"
-          style={{ flex: 1, padding: 5 }}
+          style={{ flex: 1, padding: 10, borderRadius: 8, border: '1px solid #ccc' }}
+          value={input}
+          onChange={e => setInput(e.target.value)}
+          onKeyDown={handleKey}
+          placeholder="Écrire un message..."
         />
-        <button type="submit" disabled={sending}>
-          {sending ? 'Envoi...' : 'Envoyer'}
+        <button
+          style={{ marginLeft: 8, padding: '0 20px', borderRadius: 8, backgroundColor: '#2563eb', color: '#fff', border: 'none' }}
+          onClick={sendMessage}
+        >
+          Envoyer
         </button>
-      </form>
+      </div>
     </div>
   )
 }

@@ -1,4 +1,4 @@
-import { NextRequest } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 
 const supabase = createClient(
@@ -6,10 +6,11 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 )
 
+// GET : récupère les messages de l'utilisateur
 export async function GET(req: NextRequest) {
   try {
     const userId = req.headers.get('x-user-id')
-    if (!userId) return new Response(JSON.stringify({ error: 'Missing user_id' }), { status: 400 })
+    if (!userId) return NextResponse.json({ error: 'Missing user_id' }, { status: 400 })
 
     const { data, error } = await supabase
       .from('messages')
@@ -17,20 +18,22 @@ export async function GET(req: NextRequest) {
       .eq('user_id', userId)
       .order('created_at', { ascending: true })
 
-    if (error) return new Response(JSON.stringify({ error: error.message }), { status: 500 })
-    return new Response(JSON.stringify(data), { status: 200 })
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+
+    return NextResponse.json(data)
   } catch (err: any) {
-    return new Response(JSON.stringify({ error: err.message }), { status: 500 })
+    return NextResponse.json({ error: err.message }, { status: 500 })
   }
 }
 
+// POST : ajoute un message pour l'utilisateur
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json()
     const { content, role, user_id } = body
 
     if (!content || !user_id || !role) {
-      return new Response(JSON.stringify({ error: 'Missing content, role or user_id' }), { status: 400 })
+      return NextResponse.json({ error: 'Missing content, role or user_id' }, { status: 400 })
     }
 
     const { data, error } = await supabase
@@ -38,9 +41,10 @@ export async function POST(req: NextRequest) {
       .insert([{ content, role, user_id }])
       .select()
 
-    if (error) return new Response(JSON.stringify({ error: error.message }), { status: 500 })
-    return new Response(JSON.stringify(data), { status: 200 })
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+
+    return NextResponse.json(data)
   } catch (err: any) {
-    return new Response(JSON.stringify({ error: err.message }), { status: 500 })
+    return NextResponse.json({ error: err.message }, { status: 500 })
   }
 }

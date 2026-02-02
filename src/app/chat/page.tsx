@@ -9,46 +9,55 @@ interface Message {
 }
 
 export default function ChatPage() {
-  const [userId, setUserId] = useState('')
+  const [userId, setUserId] = useState<string>('')
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState('')
   const endRef = useRef<HTMLDivElement>(null)
 
-  // Génère ou récupère userId unique
+  // Génération safe de UUID côté client
   useEffect(() => {
     let id = localStorage.getItem('user_id')
     if (!id) {
-      id = crypto.randomUUID()
+      // crypto.randomUUID() peut planter sur certains navigateurs, on met fallback simple
+      id = (Math.random() + 1).toString(36).substring(2, 15)
       localStorage.setItem('user_id', id)
     }
     setUserId(id)
   }, [])
 
-  // Récupère les messages
+  // Récupère messages
   const fetchMessages = async () => {
     if (!userId) return
-    const res = await fetch('/api/messages', {
-      headers: { 'x-user-id': userId }
-    })
-    const data = await res.json()
-    setMessages(data || [])
-    endRef.current?.scrollIntoView({ behavior: 'smooth' })
+    try {
+      const res = await fetch('/api/messages', {
+        headers: { 'x-user-id': userId }
+      })
+      const data = await res.json()
+      setMessages(data || [])
+      endRef.current?.scrollIntoView({ behavior: 'smooth' })
+    } catch (err) {
+      console.error('Fetch messages error:', err)
+    }
   }
 
   useEffect(() => {
-    fetchMessages()
+    if (userId) fetchMessages()
   }, [userId])
 
   // Envoi de message
   const sendMessage = async () => {
     if (!input.trim()) return
-    await fetch('/api/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ content: input, role: 'user', user_id: userId })
-    })
-    setInput('')
-    fetchMessages()
+    try {
+      await fetch('/api/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ content: input, role: 'user', user_id: userId })
+      })
+      setInput('')
+      fetchMessages()
+    } catch (err) {
+      console.error('Send message error:', err)
+    }
   }
 
   const handleKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -59,13 +68,7 @@ export default function ChatPage() {
     <div style={{ maxWidth: 600, margin: '0 auto', padding: 20 }}>
       <div style={{ minHeight: 400, border: '1px solid #ccc', borderRadius: 8, padding: 10, overflowY: 'auto' }}>
         {messages.map(m => (
-          <div
-            key={m.id}
-            style={{
-              textAlign: m.role === 'user' ? 'right' : 'left',
-              margin: '5px 0'
-            }}
-          >
+          <div key={m.id} style={{ textAlign: m.role === 'user' ? 'right' : 'left', margin: '5px 0' }}>
             <span
               style={{
                 display: 'inline-block',

@@ -14,6 +14,7 @@ export default function ChatPage() {
   const [input, setInput] = useState('')
   const endRef = useRef<HTMLDivElement>(null)
 
+  // Génère un user_id unique et le stocke dans localStorage
   useEffect(() => {
     let id = localStorage.getItem('user_id')
     if (!id) {
@@ -23,16 +24,15 @@ export default function ChatPage() {
     setUserId(id)
   }, [])
 
+  // Récupère les messages pour l'utilisateur
   const fetchMessages = async () => {
     if (!userId) return
     try {
       const res = await fetch('/api/messages', { headers: { 'x-user-id': userId } })
       const data = await res.json()
-      // Vérification : si data n'est pas un tableau, on force tableau vide
       setMessages(Array.isArray(data) ? data : [])
       endRef.current?.scrollIntoView({ behavior: 'smooth' })
-    } catch (err) {
-      console.error(err)
+    } catch {
       setMessages([])
     }
   }
@@ -41,6 +41,7 @@ export default function ChatPage() {
     if (userId) fetchMessages()
   }, [userId])
 
+  // Envoie un message
   const sendMessage = async () => {
     if (!input.trim()) return
     try {
@@ -63,7 +64,7 @@ export default function ChatPage() {
   return (
     <div style={{ maxWidth: 600, margin: '0 auto', padding: 20 }}>
       <div style={{ minHeight: 400, border: '1px solid #ccc', borderRadius: 8, padding: 10, overflowY: 'auto' }}>
-        {Array.isArray(messages) && messages.map(m => (
+        {messages.map(m => (
           <div key={m.id} style={{ textAlign: m.role === 'user' ? 'right' : 'left', margin: '5px 0' }}>
             <span
               style={{

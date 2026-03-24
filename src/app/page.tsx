@@ -1,95 +1,108 @@
+// src/app/page.tsx
 import Link from "next/link"
-import Image from "next/image"
 
-export default function Home() {
+export const metadata = {
+  title: "Troisième Chemin — Psychologie Humaine & Pratique Clinique",
+  description: "Explorez des guides de psychologie basés sur la recherche et rejoignez Troisième Chemin.",
+}
+
+export default function HomePage() {
   return (
-    <main className="min-h-screen text-foreground">
-      {/* Hero */}
-      <section>
-        <div className="mx-auto max-w-6xl px-6 py-20 grid gap-12 md:grid-cols-2 md:items-center">
-          <div>
-            <h1 className="text-5xl md:text-6xl font-bold leading-tight tracking-tight">
-              Psychologie : incarner la vie, découvrez votre monde
-            </h1>
-            <p className="mt-5 text-xl/8 opacity-80">
-              Accompagnement psychologique et guides pratiques en ligne.
-            </p>
-            <div className="mt-10 flex flex-wrap gap-4">
-              <Link
-                href="/boutique"
-                className="rounded-md bg-accent px-6 py-3 text-white text-base font-medium
-                           transition transform-gpu hover:-translate-y-1 hover:scale-[1.02] hover:shadow-lg
-                           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
-              >
-                Découvrir les guides
-              </Link>
-              <Link
-                href="/articles"
-                className="rounded-md border border-accent/20 px-6 py-3 text-base font-medium
-                           transition hover:bg-accent/5 hover:border-accent"
-              >
-                Lire les articles
-              </Link>
+    <main className="max-w-6xl mx-auto px-6 py-2 flex flex-col min-h-screen font-serif text-slate-900">
+
+      {/* Header - Collé en haut */}
+      <header className="text-center mt-2 mb-4">
+        <h1 className="text-5xl md:text-6xl font-medium tracking-tight italic">
+          Troisième Chemin
+        </h1>
+        <p className="text-lg text-slate-600 max-w-2xl mx-auto font-sans italic opacity-80">
+          Guidance psychologique pratique et rigoureuse.
+        </p>
+      </header>
+
+      {/* SECTION PRINCIPALE - BANDEAU HORIZONTAL (Hauteur fixe h-56 = 224px) */}
+      <section className="w-full mb-6">
+        <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-slate-100 p-1.5 bg-white">
+          <div className="relative rounded-2xl overflow-hidden h-56 md:h-60 flex items-center px-8 md:px-16">
+            <div 
+              className="absolute inset-0 bg-cover bg-[center_top_25%] sepia-[0.1]" 
+              style={{ backgroundImage: "url('/hero.jpg')" }}
+            />
+            <div className="absolute inset-0 bg-slate-900/60" />
+
+            <div className="relative w-full">
+              <ul className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4">
+                <li>
+                  <Link href="/boutique" className="group flex items-center gap-3 text-white hover:text-blue-300 transition">
+                    <span className="text-blue-400 font-bold text-3xl">/</span>
+                    <span className="font-medium underline decoration-white/30 underline-offset-8 text-2xl">Guides Complets</span>
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/articles" className="group flex items-center gap-3 text-white hover:text-blue-300 transition">
+                    <span className="text-blue-400 font-bold text-3xl">/</span>
+                    <span className="font-medium underline decoration-white/30 underline-offset-8 text-2xl">Articles</span>
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/articles" className="group flex items-center gap-3 text-white hover:text-blue-300 transition">
+                    <span className="text-blue-400 font-bold text-3xl">/</span>
+                    <span className="font-medium underline decoration-white/30 underline-offset-8 text-2xl">Ressources</span>
+                  </Link>
+                </li>
+                <li>
+                  <a href="https://chat.troisiemechemin.fr" target="_blank" className="group flex items-center gap-3 text-white hover:text-blue-300 transition">
+                    <span className="text-blue-400 font-bold text-3xl">/</span>
+                    <span className="font-medium underline decoration-white/30 underline-offset-8 text-2xl">L'Approche</span>
+                  </a>
+                </li>
+              </ul>
             </div>
           </div>
-
-          <div className="relative aspect-[3/2] w-full overflow-hidden rounded-xl border">
-            <Image
-              src="/hero.jpg"
-              alt="Troisième Chemin — regard sans haine"
-              fill
-              className="object-cover object-[50%_20%] transition transform-gpu hover:scale-[1.03]"
-              priority
-              sizes="(min-width:768px) 50vw, 100vw"
-            />
-          </div>
+        </div>
+        
+        {/* Barre App - Sortie du bloc image pour aérer et gagner de la place */}
+        <div className="mt-4">
+          <a href="https://chat.troisiemechemin.fr" target="_blank" className="flex items-center justify-center gap-4 bg-blue-50/50 border border-blue-100 p-3 rounded-2xl hover:bg-blue-100 transition shadow-sm text-slate-800 italic font-medium">
+            <span className="text-blue-500">✦</span>
+            <span>Troisième chemin : l'app de psychologie 100% humaine, sans IA</span>
+          </a>
         </div>
       </section>
 
-      {/* Contenu */}
-      <section className="mx-auto max-w-6xl px-6 py-16 border-t border-muted/30">
-        <h2 className="text-3xl font-semibold">Ce que tu trouveras ici</h2>
+      {/* SECTION DU BAS - CARTES VERTICALES CLASSIQUES */}
+      <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        
+        <Link href="/boutique" className="group block border border-slate-200 rounded-3xl overflow-hidden hover:border-slate-400 transition bg-white p-2 shadow-sm">
+          <div className="relative h-28 w-full rounded-2xl overflow-hidden">
+            <img src="/guide.jpg" alt="Boutique" className="w-full h-full object-cover sepia-[0.1]" />
+          </div>
+          <div className="p-4">
+            <h3 className="text-xl font-medium mb-1 italic">La Boutique</h3>
+            <p className="text-xs text-slate-500 font-sans leading-relaxed">Cadres théoriques et pratiques basés sur la recherche.</p>
+          </div>
+        </Link>
 
-        <div className="mt-8 grid gap-6 md:grid-cols-3">
-          {/* Guides */}
-          <Link
-            href="/boutique"
-            aria-label="Voir les guides complets"
-            className="group block rounded-xl border overflow-hidden transition
-                       hover:-translate-y-1 hover:shadow-xl hover:border-accent transform-gpu"
-          >
-            <div className="relative aspect-[3/2]">
-              <Image
-                src="/guide.jpg"
-                alt="Guides complets"
-                fill
-                className="object-cover transition transform-gpu group-hover:scale-[1.03]"
-              />
-            </div>
-            <div className="p-6">
-              <h3 className="text-lg font-semibold group-hover:text-accent">
-                Guides complets
-              </h3>
-              <p className="mt-2 text-base opacity-80">
-                E-books PDF : estime de soi, anxiété, dépression, relations, sommeil, TDAH, TSA, créativité, haut potentiel.
-              </p>
-            </div>
-          </Link>
+        <Link href="/articles" className="group block border border-slate-200 rounded-3xl overflow-hidden hover:border-slate-400 transition bg-white p-2 shadow-sm">
+          <div className="relative h-28 w-full rounded-2xl overflow-hidden">
+            <img src="/articles.jpg" alt="Articles" className="w-full h-full object-cover sepia-[0.1]" />
+          </div>
+          <div className="p-4">
+            <h3 className="text-xl font-medium mb-1 italic">Articles</h3>
+            <p className="text-xs text-slate-500 font-sans leading-relaxed">Exploration du comportement et développement.</p>
+          </div>
+        </Link>
 
-          <article className="rounded-xl border p-6 transition hover:shadow-md hover:border-accent/50">
-            <h3 className="text-lg font-semibold">Approche humaniste</h3>
-            <p className="mt-2 text-base opacity-80">
-              Une psychologie sans jugement, centrée sur le sens, le désir et l’expérience vécue.
-            </p>
-          </article>
+        <a href="https://chat.troisiemechemin.fr" target="_blank" className="group block border border-blue-200 rounded-3xl overflow-hidden hover:border-blue-400 transition bg-blue-50/40 p-2 shadow-sm">
+          <div className="relative h-28 w-full rounded-2xl overflow-hidden">
+            <img src="/humanist-approach.jpg" alt="App" className="w-full h-full object-cover sepia-[0.1]" />
+          </div>
+          <div className="p-4">
+            <h3 className="text-xl font-bold italic text-blue-900 mb-1">L'Application</h3>
+            <p className="text-xs text-blue-800/70 font-sans leading-relaxed">Espace de thérapie 100% humaine.</p>
+          </div>
+        </a>
 
-          <article className="rounded-xl border p-6 transition hover:shadow-md hover:border-accent/50">
-            <h3 className="text-lg font-semibold">Autonomie psychique</h3>
-            <p className="mt-2 text-base opacity-80">
-              Comprendre son fonctionnement pour devenir acteur de sa transformation.
-            </p>
-          </article>
-        </div>
       </section>
     </main>
   )

@@ -23,6 +23,13 @@ export default function Home() {
               >
                 Découvrir les guides
               </Link>
+              <Link
+                href="/articles"
+                className="rounded-md border border-accent/20 px-6 py-3 text-base font-medium
+                           transition hover:bg-accent/5 hover:border-accent"
+              >
+                Lire les articles
+              </Link>
             </div>
           </div>
 
@@ -40,7 +47,7 @@ export default function Home() {
       </section>
 
       {/* Contenu */}
-      <section className="mx-auto max-w-6xl px-6 py-16">
+      <section className="mx-auto max-w-6xl px-6 py-16 border-t border-muted/30">
         <h2 className="text-3xl font-semibold">Ce que tu trouveras ici</h2>
 
         <div className="mt-8 grid gap-6 md:grid-cols-3">

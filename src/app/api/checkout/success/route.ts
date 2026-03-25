@@ -16,51 +16,34 @@ export async function GET(req: Request) {
   const id = url.searchParams.get("id") || url.searchParams.get("session_id")
   if (!id) return NextResponse.json({ error: "missing_session_id" }, { status: 400 })
 
-  const s = await stripe.checkout.sessions.retrieve(id, {
-    expand: ["subscription", "customer", "line_items.data.price.product"],
-  })
-
-  const track =
-    (s.metadata?.track as string | undefined) ||
-    s.client_reference_id ||
-    null
-
-  const email = s.customer_details?.email || null
-
-  let slug: string | null = null
-  const line = s.line_items?.data?.[0]
-
-  // --- récupération du slug depuis metadata produit Stripe
-  if (line?.price?.product && typeof line.price.product !== "string") {
-    const product = line.price.product as Stripe.Product
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    slug = (product.metadata as any)?.slug || null
-  }
-
-  // --- fallback sur description
-  if (!slug && line?.description) {
-    slug = line.description.toLowerCase().replace(/\s+/g, "-")
-  }
-
-  const res = NextResponse.json({ track, email, slug }, { status: 200 })
-
-  const isMember = track === "t1-fr" || track === "t2-fr"
-  const customerId =
-    typeof s.customer === "string"
-      ? s.customer
-      : s.customer
-      ? (s.customer as Stripe.Customer).id
-      : null
-
-  if (customerId && isMember) {
-    res.cookies.set("member_cid", customerId, {
-      httpOnly: true,
-      sameSite: "lax",
-      secure: process.env.NODE_ENV !== "development",
-      maxAge: 60 * 60 * 24 * 30,
-      path: "/",
+  try {
+    const s = await stripe.checkout.sessions.retrieve(id, {
+      expand: ["line_items.data.price.product"],
     })
-  }
 
-  return res
+    const email = s.customer_details?.email || null
+    let slug: string | null = null
+    const line = s.line_items?.data?.[0]
+
+    // 1. Récupération du slug via les metadata du produit Stripe (le plus fiable)
+    if (line?.price?.product && typeof line.price.product !== "string") {
+      const product = line.price.product as Stripe.Product
+      slug = (product.metadata as any)?.slug || null
+    }
+
+    // 2. Fallback sur le nom du produit (transformé en slug)
+    if (!slug && line?.description) {
+      slug = line.description.toLowerCase().trim().replace(/\s+/g, "-")
+    }
+
+    // On renvoie juste ce qui est nécessaire pour la page de succès
+    return NextResponse.json({ 
+      status: s.payment_status, // "paid", "unpaid", etc.
+      email, 
+      slug 
+    }, { status: 200 })
+
+  } catch (e) {
+    return NextResponse.json({ error: "stripe_error" }, { status: 500 })
+  }
 }

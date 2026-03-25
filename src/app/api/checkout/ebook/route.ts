@@ -5,7 +5,11 @@ import { products } from "@/app/boutique/data"
 export const runtime = "nodejs"
 export const dynamic = "force-dynamic"
 
-function mustGet(n: string) { const v = process.env[n]; if (!v) throw new Error(`Missing ${n}`); return v }
+function mustGet(n: string) { 
+  const v = process.env[n]; 
+  if (!v) throw new Error(`Missing ${n}`); 
+  return v 
+}
 const stripe = new Stripe(mustGet("STRIPE_SECRET_KEY"))
 
 export async function POST(req: Request) {
@@ -17,7 +21,9 @@ export async function POST(req: Request) {
 
   const origin = process.env.NEXT_PUBLIC_SITE_URL || new URL(req.url).origin
   const isPack = slug === "pack-integral"
-  const unit_amount = isPack ? 4900 : 900 // 49 € / 9 €
+  
+  // Correction des montants pour correspondre à 9.50€ et 54.50€
+  const unit_amount = isPack ? 5450 : 950 
   const currency = "eur"
 
   const session = await stripe.checkout.sessions.create({
@@ -30,7 +36,7 @@ export async function POST(req: Request) {
       price_data: {
         currency,
         unit_amount,
-        product_data: { name: p.title }, // le webhook se base sur le titre
+        product_data: { name: p.title }, // Indispensable pour ton webhook
       },
     }],
   })

@@ -10,36 +10,37 @@ export default function BuyButton({
   slug,
   title,
   image,
-}: { slug: string; title: string; image: string }) {
+  price,
+}: { slug: string; title: string; image: string; price: string }) {
   const [loading, setLoading] = useState(false)
   const [hover, setHover] = useState(false)
 
+  // Vérification stricte
+  const isFree = slug === "introduction-aux-guides" || price === "Gratuit"
   const cursor = loading ? svgCursor("⏳") : hover ? svgCursor("✨") : svgCursor("🪄")
 
   async function go() {
+    if (isFree) {
+      // Route exacte basée sur ton fichier dans /public/
+      // Le navigateur transforme les espaces en %20 automatiquement
+      window.open("/Introduction aux guides.pdf", "_blank")
+      return
+    }
+
     try {
       setLoading(true)
-
-      // 1) tente tarif membre
-      const m = await fetch("/api/checkout/ebook-member", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ slug, image }),
-      })
-      if (m.ok) {
-        const { url } = await m.json() as { url?: string }
-        if (url) { window.location.href = url; return }
-      }
-
-      // 2) fallback prix public
       const r = await fetch("/api/checkout/ebook", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ slug, image }),
       })
-      const { url } = await r.json() as { url?: string }
-      if (r.ok && url) { window.location.href = url; return }
-
+      const { url } = await r.json()
+      if (r.ok && url) { 
+        window.location.href = url
+        return 
+      }
+      alert("Une erreur est survenue lors de l'accès au paiement.")
+    } catch (e) {
       alert("Achat indisponible pour le moment.")
     } finally {
       setLoading(false)
@@ -54,14 +55,9 @@ export default function BuyButton({
       onClick={go}
       disabled={loading}
       style={{ cursor }}
-      className={[
-        "rounded-md px-6 py-3 text-base bg-purple-600 text-white",
-        "hover:bg-purple-700 transition active:scale-[0.98]",
-        loading ? "opacity-70" : "",
-      ].join(" ")}
-      title={loading ? "Redirection…" : `Acheter « ${title} »`}
+      className={`rounded-md px-8 py-3 text-base font-bold uppercase tracking-tight bg-purple-600 text-white transition transform-gpu hover:-translate-y-1 hover:shadow-lg active:scale-95 ${loading ? "opacity-70" : ""}`}
     >
-      {loading ? "Redirection…" : "Acheter"}
+      {loading ? "Redirection…" : isFree ? "Accès Libre" : "Acheter"}
     </button>
   )
 }

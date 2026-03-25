@@ -1,15 +1,42 @@
-// src/app/articles/[slug]/page.tsx
 import { getPostBySlug, getAllPosts } from "@/lib/posts"
 import { notFound } from "next/navigation"
 import ReactMarkdown from "react-markdown"
 import Link from "next/link"
 import ShareActions from "@/components/ShareActions"
 
+// Configuration des balises Meta pour le partage (Facebook, LinkedIn, X)
 export async function generateMetadata({ params }: { params: any }) {
   const { slug } = await params
   const post = getPostBySlug(slug) as any
   if (!post) return {}
-  return { title: `${post.title} | Troisième Chemin`, description: post.summary }
+
+  const url = `https://troisiemechemin.fr/articles/${slug}`
+
+  return {
+    title: `${post.title} | Troisième Chemin`,
+    description: post.summary,
+    openGraph: {
+      title: post.title,
+      description: post.summary,
+      url: url,
+      siteName: 'Troisième Chemin',
+      images: [
+        {
+          url: post.image,
+          width: 1200,
+          height: 630,
+        },
+      ],
+      locale: 'fr_FR',
+      type: 'article',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: post.title,
+      description: post.summary,
+      images: [post.image],
+    },
+  }
 }
 
 export async function generateStaticParams() {
@@ -34,7 +61,15 @@ const markdownComponents = {
     </div>
   ),
   strong: ({ ...props }: any) => <strong {...props} className="font-bold text-slate-900 bg-blue-50 px-1" />,
-  a: ({ ...props }: any) => <a {...props} target="_blank" rel="noopener noreferrer" className="text-blue-600 font-bold underline decoration-1 underline-offset-4 hover:text-blue-800 transition-all" />,
+  // Liens dans le corps de l'article -> Nouvel onglet
+  a: ({ ...props }: any) => (
+    <a 
+      {...props} 
+      target="_blank" 
+      rel="noopener noreferrer" 
+      className="text-blue-600 font-bold underline decoration-1 underline-offset-4 hover:text-blue-800 transition-all" 
+    />
+  ),
   img: ({ ...props }: any) => (
     <span className="block my-12 w-full rounded-3xl overflow-hidden shadow-xl border border-slate-100 p-2 bg-white">
       <img {...props} className="w-full h-auto rounded-2xl block" alt={props.alt || "Image article"} />
@@ -48,7 +83,10 @@ export default async function ArticlePage({ params }: { params: any }) {
   if (!post) return notFound()
 
   const contentParts = (post.content || "").split("[CTA-APP]")
-  const articleUrl = `https://troisiemechemin.fr/articles/${slug}`
+  
+  // URL dynamique pour le partage
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://troisiemechemin.fr"
+  const articleUrl = `${baseUrl}/articles/${slug}`
 
   return (
     <main className="max-w-7xl mx-auto px-6 py-10">
@@ -66,20 +104,22 @@ export default async function ArticlePage({ params }: { params: any }) {
           <p className="text-2xl font-light text-slate-500 italic max-w-2xl mx-auto leading-snug">{post.summary}</p>
         </header>
 
-        {/* PREMIER PARTAGE */}
+        {/* Partage Haut */}
         <ShareActions url={articleUrl} title={post.title} />
 
         <div className="max-w-5xl mx-auto mb-10">
           <div className="relative w-full rounded-3xl overflow-hidden shadow-2xl border border-slate-100 p-2 bg-white">
-             <img 
-               src={post.image} 
-               alt={post.title} 
-               className="w-full h-auto max-h-150 object-cover rounded-2xl block" 
-             />
+             <img src={post.image} alt={post.title} className="w-full h-auto max-h-150 object-cover rounded-2xl block" />
           </div>
           {post.imageCredit && (
             <div className="text-center text-[10px] text-slate-400 italic font-sans tracking-widest uppercase mt-4">
-              <ReactMarkdown components={{ p: ({node, ...p}) => <span {...p} />, a: ({node, ...p}) => <a {...p} className="underline hover:text-blue-600" /> }}>
+              <ReactMarkdown 
+                components={{ 
+                  p: ({node, ...p}) => <span {...p} />, 
+                  // Lien crédit photo -> Nouvel onglet
+                  a: ({node, ...p}) => <a {...p} target="_blank" rel="noopener noreferrer" className="underline hover:text-blue-600" /> 
+                }}
+              >
                 {post.imageCredit}
               </ReactMarkdown>
             </div>
@@ -91,7 +131,12 @@ export default async function ArticlePage({ params }: { params: any }) {
             <ReactMarkdown components={markdownComponents}>{contentParts[0]}</ReactMarkdown>
 
             {contentParts.length > 1 && (
-              <a href="https://chat.troisiemechemin.fr" target="_blank" rel="noopener noreferrer" className="block my-16 group p-px rounded-3xl bg-linear-to-br from-blue-100 to-transparent shadow-sm hover:shadow-md transition-all">
+              <a 
+                href="https://chat.troisiemechemin.fr" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="block my-16 group p-px rounded-3xl bg-linear-to-br from-blue-100 to-transparent shadow-sm hover:shadow-md transition-all"
+              >
                 <div className="bg-white rounded-[22px] p-3 flex flex-col md:flex-row items-center gap-6 md:gap-8">
                   <div className="w-full md:w-48 aspect-video md:aspect-square rounded-xl overflow-hidden shadow-sm border border-slate-100">
                     <img src="/humanist-approach.jpg" alt="Troisième chemin" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 sepia-[0.1]" />
@@ -112,7 +157,7 @@ export default async function ArticlePage({ params }: { params: any }) {
           </div>
         </div>
 
-        {/* DEUXIÈME PARTAGE */}
+        {/* Partage Bas */}
         <div className="mt-20">
           <ShareActions url={articleUrl} title={post.title} />
         </div>

@@ -3,6 +3,15 @@ Allow: /
 Disallow: /api/
 Disallow: /_next/
 Disallow: /static/
+Disallow: /admin/
+Disallow: /404
+Disallow: /500
 
-# Lien vers ton sitemap dynamique
+# Optimisation du budget de crawl
+Crawl-delay: 1
+
+# Référencement du contenu dynamique
 Sitemap: https://troisiemechemin.fr/sitemap.xml
+
+# Spécification du domaine principal
+Host: https://troisiemechemin.fr

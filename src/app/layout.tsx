@@ -63,7 +63,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="fr" className="overflow-x-hidden w-full" style={{ colorScheme: 'light' }}>
       <body className={`${garamond.variable} font-serif min-h-screen flex flex-col overflow-x-hidden w-full antialiased text-slate-900`}>
         
-        {/* Google Analytics */}
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-QYNZ30WC5X"
           strategy="afterInteractive"
@@ -79,18 +78,21 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           `}
         </Script>
 
-        {/* Header */}
+        {/* Header Corrigé */}
         <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm overflow-hidden">
           <div className="absolute inset-0 pointer-events-none opacity-40" style={grainBg}></div>
-          <div className="relative z-10 mx-auto max-w-7xl px-4 md:px-6 py-3 flex items-center justify-between">
+          <div className="relative z-10 mx-auto max-w-7xl px-4 md:px-6 py-3 flex items-center justify-between gap-2">
+            
+            {/* Logo avec shrink-0 pour ne pas être écrasé */}
             <Link
               href="/"
-              className="text-lg font-semibold tracking-wide transition hover:text-blue-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 rounded text-slate-900"
+              className="text-base md:text-lg font-semibold tracking-wide transition hover:text-blue-600 shrink-0 text-slate-900"
             >
               troisiemechemin.fr
             </Link>
 
-            <nav className="flex gap-1 md:gap-2 text-base" aria-label="Navigation principale">
+            {/* Nav avec flex-wrap pour éviter le débordement sur les très petits écrans */}
+            <nav className="flex items-center gap-1 md:gap-2 text-sm md:text-base" aria-label="Navigation principale">
               {[
                 { href: "/", label: "Accueil" },
                 { href: "/boutique", label: "Boutique" },
@@ -99,7 +101,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <Link
                   key={l.href}
                   href={l.href}
-                  className="px-2 md:px-3 py-1.5 rounded-md opacity-90 transition hover:opacity-100 hover:text-blue-700 hover:bg-blue-50 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 transform-gpu text-slate-900 font-medium"
+                  className="px-1.5 md:px-3 py-1.5 rounded-md opacity-90 transition hover:opacity-100 hover:text-blue-700 hover:bg-blue-50 focus-visible:outline-none focus-visible:ring-2 text-slate-900 font-medium whitespace-nowrap"
                 >
                   {l.label}
                 </Link>
@@ -112,7 +114,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           {children}
         </main>
 
-        {/* Footer */}
         <footer className="relative border-t border-slate-200 bg-white overflow-hidden text-slate-900">
           <div className="absolute inset-0 pointer-events-none opacity-40" style={grainBg}></div>
           <div className="relative z-10 mx-auto max-w-7xl px-6 py-10 flex flex-col md:flex-row md:justify-between items-center gap-8 text-sm text-center md:text-left">
@@ -142,7 +143,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </div>
         </footer>
 
-        {/* Données structurées */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

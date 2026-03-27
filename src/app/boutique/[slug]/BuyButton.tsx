@@ -1,5 +1,5 @@
 "use client"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 function svgCursor(emoji: string) {
   const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32'><text y='24' font-size='24'>${emoji}</text></svg>`
@@ -8,21 +8,42 @@ function svgCursor(emoji: string) {
 
 export default function BuyButton({
   slug,
-  title,
+  priceEUR,
+  priceUSD,
   image,
-  price,
-}: { slug: string; title: string; image: string; price: string }) {
+}: { 
+  slug: string; 
+  priceEUR: string; 
+  priceUSD: string;
+  image: string;
+}) {
   const [loading, setLoading] = useState(false)
   const [hover, setHover] = useState(false)
+  const [displayPrice, setDisplayPrice] = useState<string>("")
+  const [activeCurrency, setActiveCurrency] = useState<string>("EUR")
 
-  // Vérification stricte
-  const isFree = slug === "introduction-aux-guides" || price === "Gratuit"
+  useEffect(() => {
+    const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
+    const isUSZone = timeZone.includes("America") || timeZone.includes("US") || timeZone.includes("Canada")
+    
+    if (slug === "introduction-aux-guides") {
+      setDisplayPrice("Gratuit")
+    } else {
+      if (isUSZone) {
+        setDisplayPrice(priceUSD)
+        setActiveCurrency("USD")
+      } else {
+        setDisplayPrice(priceEUR)
+        setActiveCurrency("EUR")
+      }
+    }
+  }, [priceEUR, priceUSD, slug])
+
+  const isFree = slug === "introduction-aux-guides"
   const cursor = loading ? svgCursor("⏳") : hover ? svgCursor("✨") : svgCursor("🪄")
 
   async function go() {
     if (isFree) {
-      // Route exacte basée sur ton fichier dans /public/
-      // Le navigateur transforme les espaces en %20 automatiquement
       window.open("/Introduction aux guides.pdf", "_blank")
       return
     }
@@ -32,14 +53,13 @@ export default function BuyButton({
       const r = await fetch("/api/checkout/ebook", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ slug, image }),
+        body: JSON.stringify({ slug, image, currency: activeCurrency }),
       })
-      const { url } = await r.json()
-      if (r.ok && url) { 
-        window.location.href = url
+      const data = await r.json()
+      if (r.ok && data.url) { 
+        window.location.href = data.url
         return 
       }
-      alert("Une erreur est survenue lors de l'accès au paiement.")
     } catch (e) {
       alert("Achat indisponible pour le moment.")
     } finally {
@@ -48,16 +68,24 @@ export default function BuyButton({
   }
 
   return (
-    <button
-      type="button"
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => setHover(false)}
-      onClick={go}
-      disabled={loading}
-      style={{ cursor }}
-      className={`rounded-md px-8 py-3 text-base font-bold uppercase tracking-tight bg-purple-600 text-white transition transform-gpu hover:-translate-y-1 hover:shadow-lg active:scale-95 ${loading ? "opacity-70" : ""}`}
-    >
-      {loading ? "Redirection…" : isFree ? "Accès Libre" : "Acheter"}
-    </button>
+    <div className="relative flex flex-col items-start">
+      {displayPrice && (
+        <span className="mb-2 text-2xl font-light text-slate-900 italic whitespace-nowrap">
+          {displayPrice}
+        </span>
+      )}
+      
+      <button
+        type="button"
+        onMouseEnter={() => setHover(true)}
+        onMouseLeave={() => setHover(false)}
+        onClick={go}
+        disabled={loading}
+        style={{ cursor }}
+        className={`h-13 rounded-md px-8 text-base font-bold uppercase tracking-tight bg-slate-900 text-white transition transform-gpu hover:-translate-y-1 hover:shadow-lg active:scale-95 flex items-center justify-center ${loading ? "opacity-70" : ""}`}
+      >
+        {loading ? "..." : isFree ? "Accès Libre" : "Commander"}
+      </button>
+    </div>
   )
 }

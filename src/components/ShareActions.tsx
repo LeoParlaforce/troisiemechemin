@@ -31,7 +31,10 @@ export default function ShareActions({ url, title }: ShareActionsProps) {
       try {
         await navigator.share({ title, url });
       } catch (error) {
-        console.error("Erreur de partage :", error);
+        // On ignore l'erreur si l'utilisateur annule le partage
+        if ((error as Error).name !== 'AbortError') {
+          console.error("Erreur de partage :", error);
+        }
       }
     } else {
       copyToClipboard();
@@ -41,19 +44,23 @@ export default function ShareActions({ url, title }: ShareActionsProps) {
   const copyToClipboard = () => {
     if (typeof navigator !== 'undefined') {
       navigator.clipboard.writeText(url);
+      // Optionnel : remplacer l'alert par un petit toast discret plus tard
       alert("Lien copié dans le presse-papier.");
     }
   };
 
   return (
-    <div className="max-w-5xl mx-auto flex flex-wrap justify-center items-center gap-x-10 gap-y-6 mb-10 py-8 border-y border-slate-100">
-      <span className="opacity-40 italic font-serif lowercase tracking-normal text-sm text-slate-500">Partager l'article :</span>
+    <div className="max-w-5xl mx-auto flex flex-wrap justify-center items-center gap-x-10 gap-y-6 mb-10 py-8 border-y border-slate-100 max-md:border-white/10">
+      <span className="opacity-40 italic font-serif lowercase tracking-normal text-sm text-slate-500 max-md:text-slate-400">
+        Partager l'article :
+      </span>
       
       <div className="flex items-center gap-8">
-        {/* X (Twitter) - Bleu ciel permanent */}
+        {/* X (Twitter) */}
         <a 
           href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`} 
-          target="_blank" rel="noopener noreferrer" title="Partager sur X" 
+          target="_blank" rel="noopener noreferrer" 
+          aria-label="Partager sur X"
           className="text-[#1DA1F2] opacity-80 hover:opacity-100 hover:scale-110 transition-all"
         >
           <IconWrapper>
@@ -62,10 +69,11 @@ export default function ShareActions({ url, title }: ShareActionsProps) {
           </IconWrapper>
         </a>
         
-        {/* Facebook - Bleu officiel permanent */}
+        {/* Facebook */}
         <a 
           href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`} 
-          target="_blank" rel="noopener noreferrer" title="Partager sur Facebook" 
+          target="_blank" rel="noopener noreferrer" 
+          aria-label="Partager sur Facebook"
           className="text-[#1877F2] opacity-80 hover:opacity-100 hover:scale-110 transition-all"
         >
           <IconWrapper>
@@ -73,10 +81,11 @@ export default function ShareActions({ url, title }: ShareActionsProps) {
           </IconWrapper>
         </a>
         
-        {/* LinkedIn - Bleu pro permanent */}
+        {/* LinkedIn */}
         <a 
           href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`} 
-          target="_blank" rel="noopener noreferrer" title="Partager sur LinkedIn" 
+          target="_blank" rel="noopener noreferrer" 
+          aria-label="Partager sur LinkedIn"
           className="text-[#0A66C2] opacity-80 hover:opacity-100 hover:scale-110 transition-all"
         >
           <IconWrapper>
@@ -86,11 +95,11 @@ export default function ShareActions({ url, title }: ShareActionsProps) {
           </IconWrapper>
         </a>
 
-        {/* Instagram / Share - Rose permanent */}
+        {/* Partage Natif (Mobile) / Instagram style */}
         <button 
           onClick={handleNativeShare} 
+          aria-label="Plus d'options de partage"
           className="text-[#E4405F] opacity-80 hover:opacity-100 hover:scale-110 transition-all cursor-pointer" 
-          title="Partager"
         >
           <IconWrapper>
             <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
@@ -99,13 +108,13 @@ export default function ShareActions({ url, title }: ShareActionsProps) {
           </IconWrapper>
         </button>
 
-        <div className="w-px h-4 bg-slate-200 mx-2 hidden md:block" />
+        <div className="w-px h-4 bg-slate-200 max-md:bg-white/10 mx-2 hidden md:block" />
         
-        {/* Copier - Bleu Troisième Chemin permanent */}
+        {/* Copier le lien */}
         <button 
           onClick={copyToClipboard} 
+          aria-label="Copier le lien"
           className="text-blue-500 opacity-80 hover:opacity-100 hover:scale-110 transition-all cursor-pointer" 
-          title="Copier le lien"
         >
           <IconWrapper>
             <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>

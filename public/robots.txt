@@ -1,6 +1,8 @@
 User-agent: *
 Allow: /
 Disallow: /api/
+Disallow: /_next/
+Disallow: /static/
 
 # Lien vers ton sitemap dynamique
 Sitemap: https://troisiemechemin.fr/sitemap.xml

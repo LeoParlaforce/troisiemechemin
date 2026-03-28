@@ -63,9 +63,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="fr" className="overflow-x-hidden w-full" style={{ colorScheme: 'light' }}>
       <body className={`${garamond.variable} font-serif min-h-screen flex flex-col overflow-x-hidden w-full antialiased text-slate-900`}>
         
-        {/* Google Analytics */}
+        {/* Google Analytics mis à jour */}
         <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-QYNZ30WC5X"
+          src="https://www.googletagmanager.com/gtag/js?id=G-90Q63XZ1TC"
           strategy="afterInteractive"
         />
         <Script id="google-analytics" strategy="afterInteractive">
@@ -73,7 +73,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
-            gtag('config', 'G-QYNZ30WC5X', {
+            gtag('config', 'G-90Q63XZ1TC', {
               page_path: window.location.pathname,
             });
           `}

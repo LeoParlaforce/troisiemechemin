@@ -1,46 +1,34 @@
-import { MetadataRoute } from 'next'
+import type { MetadataRoute } from 'next'
 import { getAllPosts } from '@/lib/posts'
+import { products } from '@/app/boutique/data'
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://troisiemechemin.fr'
-  
-  // 1. On récupère dynamiquement tous tes articles
-  const posts = getAllPosts()
-  const articleEntries = posts.map((post) => ({
-    url: `${baseUrl}/articles/${post.slug}`,
+  const base = 'https://troisiemechemin.fr'
+  const now = new Date()
+
+  const staticPages: MetadataRoute.Sitemap = [
+    { url: base, lastModified: now, changeFrequency: 'weekly', priority: 1 },
+    { url: `${base}/boutique`, lastModified: now, changeFrequency: 'weekly', priority: 0.9 },
+    { url: `${base}/articles`, lastModified: now, changeFrequency: 'weekly', priority: 0.9 },
+    { url: `${base}/pour-les-therapeutes`, lastModified: now, changeFrequency: 'monthly', priority: 0.9 },
+    { url: `${base}/a-propos`, lastModified: now, changeFrequency: 'monthly', priority: 0.5 },
+    { url: `${base}/charte-editoriale`, lastModified: now, changeFrequency: 'monthly', priority: 0.4 },
+    { url: `${base}/mentions-legales`, lastModified: now, changeFrequency: 'monthly', priority: 0.3 },
+  ]
+
+  const articleEntries: MetadataRoute.Sitemap = getAllPosts().map((post) => ({
+    url: `${base}/articles/${post.slug}`,
     lastModified: new Date(post.date),
+    changeFrequency: 'monthly' as const,
+    priority: 0.8,
+  }))
+
+  const productEntries: MetadataRoute.Sitemap = products.map((product) => ({
+    url: `${base}/boutique/${product.slug}`,
+    lastModified: now,
     changeFrequency: 'monthly' as const,
     priority: 0.7,
   }))
 
-  // 2. On définit tes pages statiques
-  const staticPages: MetadataRoute.Sitemap = [
-    {
-      url: baseUrl,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 1,
-    },
-    {
-      url: `${baseUrl}/articles`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/philosophie`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/boutique`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.8,
-    },
-  ]
-
-  // On fusionne le tout
-  return [...staticPages, ...articleEntries]
+  return [...staticPages, ...articleEntries, ...productEntries]
 }

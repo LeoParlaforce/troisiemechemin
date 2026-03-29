@@ -1,10 +1,21 @@
 ---
 title: "Pourquoi Internet est encore géographique (SEO Local pour Psychologues)"
-date: "24 Mars 2026"
+date: "2026-03-24"
+category: "Développement Professionnel"
+author: "Léo Gayrard"
 summary: "Beaucoup de thérapeutes pensent qu'Internet leur donne une visibilité mondiale. En réalité, les algorithmes privilégient la proximité. Apprenez comment le SEO local peut attirer de vrais patients."
 slug: "seo-local-psychologues"
 image: "/articles/local-seo-therapists.jpg"
 imageCredit: "Photo par [Leandro Barreto](https://unsplash.com/fr/@lpbarreto) sur Unsplash"
+faqs:
+  - question: "Qu'est-ce que le SEO Local et pourquoi est-ce important ?"
+    answer: "Le SEO Local consiste à optimiser votre présence en ligne pour être trouvé par des personnes cherchant des services dans une zone géographique précise. Pour un psychologue, c'est crucial car l'intention de recherche est presque toujours liée à un lieu."
+  - question: "Comment les patients cherchent-ils un psy en ligne ?"
+    answer: "Ils combinent souvent un symptôme et une ville : « psychologue dépression Nice ». Ils cherchent quelqu'un de pertinent et d'accessible, même si la séance a lieu en visioconférence."
+  - question: "Puis-je être visible au niveau national ?"
+    answer: "Oui, mais c'est plus facile après avoir établi une base locale forte. La confiance et l'autorité gagnées localement servent de tremplin pour un référencement plus large."
+  - question: "Comment l'IA change-t-elle la donne ?"
+    answer: "L'IA utilise les données locales pour affiner ses recommandations. Un contenu bien ancré localement aura toujours l'avantage dans les recherches assistées par IA."
 ---
 
 ## Le Paradoxe d'Internet
@@ -80,20 +91,6 @@ Les assistants boostés à l'IA privilégient les réponses qui combinent expert
 ## Conclusion
 
 Internet ne supprime pas la géographie, il la précise. Pour augmenter votre visibilité et attirer des patients, commencez par bâtir une autorité locale solide. Une fois cette base établie, vous pourrez étendre votre influence aux régions voisines en toute confiance.
-
-## FAQ
-
-### Qu'est-ce que le SEO Local et pourquoi est-ce important ?
-Le SEO Local consiste à optimiser votre présence en ligne pour être trouvé par des personnes cherchant des services dans une zone géographique précise. Pour un psychologue, c'est crucial car l'intention de recherche est presque toujours liée à un lieu.
-
-### Comment les patients cherchent-ils un psy en ligne ?
-Ils combinent souvent un symptôme et une ville : « psychologue dépression Nice ». Ils cherchent quelqu'un de pertinent et d'accessible, même si la séance a lieu en visioconférence.
-
-### Puis-je être visible au niveau national ?
-Oui, mais c'est plus facile après avoir établi une base locale forte. La confiance et l'autorité gagnées localement servent de tremplin pour un référencement plus large.
-
-### Comment l'IA change-t-elle la donne ?
-L'IA utilise les données locales pour affiner ses recommandations. Un contenu bien ancré localement aura toujours l'avantage dans les recherches assistées par IA.
 
 ## Références
 

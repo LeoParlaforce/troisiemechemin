@@ -41,10 +41,10 @@ export default function HomePage() {
 
       {/* HERO */}
       <section className="text-center mt-8">
-        <h1 className="text-4xl md:text-5xl font-medium mb-4 tracking-tight text-slate-900 max-md:text-white transition-colors duration-300">
+        <h1 className="text-4xl md:text-5xl font-medium mb-4 tracking-tight text-slate-900">
           Troisième Chemin — Psychologie
         </h1>
-        <p className="text-base md:text-lg text-slate-700 max-md:text-slate-300 max-w-2xl mx-auto leading-relaxed font-sans opacity-90 mb-6 px-2 transition-colors duration-300">
+        <p className="text-base md:text-lg text-slate-700 max-w-2xl mx-auto leading-relaxed font-sans opacity-90 mb-6 px-2">
           Accompagnement psychologique pratique et basé sur la recherche pour la croissance personnelle, le bien-être et la compréhension du comportement humain.
         </p>
         <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-100/50 border border-blue-200 text-blue-800 text-xs font-sans font-medium tracking-wide shadow-sm backdrop-blur-sm">

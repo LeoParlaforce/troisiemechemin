@@ -15,7 +15,7 @@ export default function ArticlesPage() {
   const libraryFaqs = [
     { question: "À quelle fréquence la section Articles est-elle mise à jour ?", answer: "Nous publions de nouvelles réflexions mensuellement." },
     { question: "Puis-je citer ces articles ?", answer: "Oui, veuillez citer 'Troisième Chemin' et inclure l'URL spécifique." }
-  ];
+  ]
 
   return (
     <main className="max-w-6xl mx-auto px-4 sm:px-6 py-12 md:py-16 font-serif w-full bg-transparent">
@@ -46,16 +46,14 @@ export default function ArticlesPage() {
           ])
         }}
       />
-
       <header className="mb-12 md:mb-16 border-b border-slate-200/50 pb-8">
-        <h1 className="text-4xl md:text-5xl font-medium italic tracking-tight text-slate-900 max-md:text-white mb-4 transition-colors">
+        <h1 className="text-4xl md:text-5xl font-medium italic tracking-tight text-slate-900 mb-4">
           Articles.
         </h1>
-        <p className="text-base md:text-lg text-slate-600 max-md:text-slate-300 font-sans italic opacity-90 transition-colors">
+        <p className="text-base md:text-lg text-slate-600 font-sans italic opacity-90">
           Réflexions sur la psychologie, la pratique clinique et l'expérience humaine.
         </p>
       </header>
-
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
         {posts.map((post: Post) => (
           <Link key={post.slug} href={`/articles/${post.slug}`} className="group block">
@@ -69,10 +67,10 @@ export default function ArticlesPage() {
                   <span className="text-slate-300">/</span>
                   <span>Réflexions</span>
                 </div>
-                <h2 className="text-xl md:text-2xl font-semibold text-slate-900 max-md:text-white group-hover:text-blue-600 transition-colors">
+                <h2 className="text-xl md:text-2xl font-semibold text-slate-900 group-hover:text-blue-600 transition-colors">
                   {post.title}
                 </h2>
-                <p className="text-slate-600 max-md:text-slate-400 text-sm leading-relaxed font-sans italic line-clamp-3">
+                <p className="text-slate-600 text-sm leading-relaxed font-sans italic line-clamp-3">
                   {post.summary}
                 </p>
               </div>

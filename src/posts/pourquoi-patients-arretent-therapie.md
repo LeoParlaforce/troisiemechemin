@@ -16,6 +16,8 @@ faqs:
     answer: "Les patients se désengagent souvent précisément quand quelque chose commence à se mettre en mouvement — non pas parce que la thérapie ne fonctionne pas, mais parce qu'elle commence à fonctionner. L'intervalle entre les séances laisse le temps au matériel non traité de se solidifier en évitement. C'est un problème structurel, pas motivationnel."
   - question: "Un contact plus fréquent réduit-il l'abandon ?"
     answer: "Oui. La recherche montre de manière constante qu'un contact régulier entre les séances renforce l'alliance thérapeutique, qui est le principal prédicteur des résultats. Les formats à contact plus fréquent ont montré des taux d'abandon jusqu'à 50% inférieurs à la thérapie hebdomadaire classique."
+  - question: "Que puis-je faire cette semaine pour réduire les abandons dans ma pratique ?"
+    answer: "Commencez par auditer vos six derniers mois de suivi et comptez combien de patients ont arrêté dans les sept premières séances. Identifiez ensuite ce qui se passait dans la séance qui précédait chaque départ. La plupart des thérapeutes trouvent un pattern — un moment où quelque chose a été touché et où le patient est reparti le porter seul pendant une semaine. C'est là que se trouve le levier structurel."
 ---
 
 ## Le patient qui a arrêté de venir
@@ -96,9 +98,26 @@ Les patients qui restent ne sont pas ceux qui sont plus motivés ou mieux adapt�
 
 Changer le cadre, ce n'est pas travailler plus. C'est travailler d'une manière qui corresponde à la nature réelle de la détresse qu'il cherche à tenir.
 
+## Ce que vous pouvez faire cette semaine
+
+Si cela résonne avec votre expérience clinique, voici par où commencer — non pas comme exercice théorique, mais comme audit concret de votre pratique actuelle.
+
+**Comptez vos sorties précoces.** Reprenez vos six derniers mois de suivi et identifiez chaque patient qui a arrêté dans les sept premières séances. Ne rationalisez pas les départs — comptez-les, et notez ce qui se passait dans la séance qui précédait chaque sortie. La plupart des thérapeutes trouvent un pattern qu'ils n'avaient pas consciemment enregistré.
+
+**Observez ce que vous laissez ouvert.** Dans vos trois prochaines séances, prêtez attention aux moments où quelque chose est touché mais pas entièrement traité avant la fin de l'heure. Ce sont les moments que votre patient va porter seul pendant six jours. Demandez-vous : y a-t-il un moyen d'indiquer que ce matériel reste ouvert, et de lui donner quelque chose à tenir jusqu'à la prochaine séance ?
+
+**Auditez l'espace entre les séances.** Pour chacun de vos patients actuels, posez-vous honnêtement la question : à quoi ressemble l'espace entre nos séances pour lui ? A-t-il un quelconque contact avec la relation thérapeutique entre les rendez-vous, ou le travail n'existe-t-il que dans la fenêtre de cinquante minutes ? Pour les patients à engagement fragile, ce silence de six jours n'est pas neutre — c'est là que la décision d'abandon se prend.
+
+**Réfléchissez à ce que la continuité pourrait concrètement signifier.** Vous n'avez pas besoin d'augmenter le nombre de séances pour augmenter la continuité relationnelle. Un bref échange écrit, une invitation à noter ce qui remonte entre les séances, un simple signal que le travail ne s'arrête pas à la porte — ces éléments ne remplacent pas le travail clinique, mais ils modifient la forme du cadre. Ils indiquent que la relation ne se met pas en veille dès que la séance se termine.
+
+**Prenez une supervision centrée sur vos cas d'abandon.** Ce qui est le plus difficile à résoudre seul dans ce type de plateau structurel, c'est que les patterns qui le maintiennent sont largement invisibles de l'intérieur. Une supervision centrée spécifiquement sur l'expérience entre les séances — plutôt que sur la technique en séance — fait souvent remonter des dynamiques qu'on n'aurait pas repérées autrement.
+
+Le taux d'abandon dans votre pratique n'est pas une caractéristique fixe de votre population de patients. C'est, au moins en partie, une fonction du cadre que vous leur offrez. Ce cadre est quelque chose que vous pouvez examiner, et modifier.
+
 ## Références
 
 - Swift, J. K., & Greenberg, R. P. (2012). Premature discontinuation in adult psychotherapy: A meta-analysis. *Journal of Consulting and Clinical Psychology*, 80(4), 547–559.
 - Carpallo-González, A., et al. (2023). Dropout from anxiety treatment. *Clinical Psychology Review.*
 - Harvard Health Publishing. (2014). Dropping out of psychotherapy. *Harvard Medical School.*
 - Schwartz, B., & Flowers, J. (2010). *How to Fail as a Therapist*. New Harbinger Publications.
+- Stucki, G., & Grawe, K. (2007). Alliance and dropout in psychotherapy. *Psychotherapy Research.*

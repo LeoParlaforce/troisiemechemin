@@ -8,7 +8,7 @@ const garamond = EB_Garamond({
   subsets: ["latin"],
   weight: ["400", "700"],
   variable: "--font-garamond",
-  display: "swap", // FIX performance : évite le FOUT
+  display: "swap",
 })
 
 export const metadata: Metadata = {
@@ -51,8 +51,6 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
-  // FIX : remplace par ton vrai code Google Search Console
-  // verification: { google: "TON_CODE_ICI" },
 }
 
 const grainBg = {
@@ -60,9 +58,6 @@ const grainBg = {
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  // FIX JSON-LD : @graph avec @id cross-références
-  // sameAs relie troisiemechemin.fr à thirdpath.cloud et parlaforce.com
-  // → Google comprend que c'est le même auteur = boost E-E-A-T cross-domain
   const jsonLd = {
     "@context": "https://schema.org",
     "@graph": [
@@ -156,12 +151,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               troisiemechemin.fr
             </Link>
 
+            {/* FIX : "Thérapeutes" retiré du menu — accessible via homepage et footer */}
             <nav aria-label="Navigation principale" className="flex items-center gap-0.5 md:gap-2">
               {[
                 { href: "/", label: "Accueil" },
                 { href: "/boutique", label: "Boutique" },
                 { href: "/articles", label: "Articles" },
-                { href: "/pour-les-therapeutes", label: "Thérapeutes" },
               ].map((l) => (
                 <Link
                   key={l.href}
@@ -175,7 +170,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </div>
         </header>
 
-        <div className="flex-1 w-full max-w-full relative z-0">
+        {/* FIX MOBILE LISIBILITÉ : fond blanc semi-transparent sur mobile pour que les textes
+            slate-900 soient lisibles sur le fond marbre sombre.
+            Sur desktop, transparent pour laisser passer le fond marbre. */}
+        <div className="flex-1 w-full max-w-full relative z-0 bg-white/85 md:bg-transparent">
           {children}
         </div>
 

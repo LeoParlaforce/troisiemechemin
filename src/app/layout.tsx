@@ -189,7 +189,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <li><Link href="/mentions-legales" className="opacity-80 hover:opacity-100 transition hover:text-blue-600 font-medium">Mentions Légales</Link></li>
                 <li><Link href="/charte-editoriale" className="opacity-80 hover:opacity-100 transition hover:text-blue-600 font-medium">Charte Éditoriale</Link></li>
                 <li><Link href="/a-propos" className="opacity-80 hover:opacity-100 transition hover:text-blue-600 font-medium">À Propos</Link></li>
-                <li><Link href="/pour-les-therapeutes" className="opacity-80 hover:opacity-100 transition hover:text-blue-600 font-medium">Pour les Thérapeutes</Link></li>
               </ul>
             </nav>
 

@@ -1,9 +1,9 @@
 ---
 title: "Les dernières découvertes montrent que la psychologie pourrait être une pseudo-science, alors que la psychanalyse, elle, ne l'est pas"
-slug: "psychologie-pseudo-science-psychanalyse"
+slug: "psychologie-pseudoscience-psychanalyse"
 description: "L'accusation faite à la psychanalyse d'être une pseudo-science suppose qu'elle prétendrait être une science. Or elle ne le prétend pas. La véritable pseudo-science, c'est ce qui s'appelle aujourd'hui psychologie — et la souffrance qu'elle produit est partout visible."
 summary: "L'accusation faite à la psychanalyse d'être une pseudo-science suppose qu'elle prétendrait être une science. Or elle ne le prétend pas. La véritable pseudo-science, c'est ce qui s'appelle aujourd'hui psychologie — et la souffrance qu'elle produit est partout visible."
-canonical: "https://troisiemechemin.fr/articles/psychologie-pseudo-science-psychanalyse"
+canonical: "https://troisiemechemin.fr/articles/psychologie-pseudoscience-psychanalyse"
 date: "2026-05-04"
 author: "Léo Gayrard"
 category: "Théorie"

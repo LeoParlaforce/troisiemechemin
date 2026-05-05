@@ -2,13 +2,14 @@
 title: "Les dernières découvertes montrent que la psychologie pourrait être une pseudo-science, alors que la psychanalyse, elle, ne l'est pas"
 slug: "psychologie-pseudo-science-psychanalyse"
 description: "L'accusation faite à la psychanalyse d'être une pseudo-science suppose qu'elle prétendrait être une science. Or elle ne le prétend pas. La véritable pseudo-science, c'est ce qui s'appelle aujourd'hui psychologie — et la souffrance qu'elle produit est partout visible."
+summary: "L'accusation faite à la psychanalyse d'être une pseudo-science suppose qu'elle prétendrait être une science. Or elle ne le prétend pas. La véritable pseudo-science, c'est ce qui s'appelle aujourd'hui psychologie — et la souffrance qu'elle produit est partout visible."
 canonical: "https://troisiemechemin.fr/articles/psychologie-pseudo-science-psychanalyse"
 date: "2026-05-04"
 author: "Léo Gayrard"
 category: "Théorie"
 image: "/articles/psychology-pseudoscience.jpeg"
 tags: ["psychanalyse", "psychologie", "pseudo-science", "Lacan", "DSM", "critique"]
-faq:
+faqs:
   - question: "La psychanalyse est-elle une science ?"
     answer: "Non, et elle ne l'a jamais prétendu. Lacan était explicite sur ce point : la psychanalyse opère sur le sujet de la science mais n'est pas elle-même une science. Elle s'adresse à ce que la science forclôt — la dimension symbolique, l'inconscient, le désir. L'accusation de « pseudo-science » suppose une prétention que la psychanalyse n'a jamais eue."
   - question: "Pourquoi qualifier la psychologie moderne de pseudo-scientifique ?"
@@ -18,8 +19,6 @@ faq:
   - question: "Mais Freud ne voulait-il pas faire de la psychanalyse une science ?"
     answer: "Si, Freud a explicitement affirmé que la psychanalyse était une science naturelle, du Projet de 1895 jusqu'à l'Abrégé de 1938. Il s'est trompé sur la nature de sa propre découverte — et ce qu'il a découvert dépasse ce qu'il croyait découvrir. Christophe Colomb cherchait les Indes et a trouvé un continent. On ne dit pas que Colomb a échoué. C'est Lacan qui a achevé la cartographie, en nommant ce que Freud avait trouvé : l'ordre symbolique, l'inconscient structuré comme un langage."
 ---
-
-# Les dernières découvertes montrent que la psychologie pourrait être une pseudo-science, alors que la psychanalyse, elle, ne l'est pas
 
 L'accusation est répétée depuis des décennies. *La psychanalyse est une pseudo-science.* Ses propositions ne sont pas falsifiables. Ses affirmations sont invérifiables. Ses résultats ne peuvent pas être reproduits dans des conditions contrôlées. Donc, on devrait s'en débarrasser.
 
@@ -142,71 +141,3 @@ Le coût est payé par les patients, qui souffrent deux fois — une fois du sym
 Si vous avez lu jusqu'ici et que vous reconnaissez quelque chose de votre propre expérience dans ce qui est décrit — le diagnostic qui n'expliquait rien, le médicament qui a réduit au silence quelque chose qui avait besoin de parler, le *apprendre à vivre avec* qui ressemblait à un renoncement — il y a une autre voie. La clinique de la parole existe encore. C'est ce que nous pratiquons.
 
 *Léo Gayrard, psychologue clinicien et psychanalyste lacanien*
-
----
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Article",
-  "headline": "Les dernières découvertes montrent que la psychologie pourrait être une pseudo-science, alors que la psychanalyse, elle, ne l'est pas",
-  "description": "L'accusation faite à la psychanalyse d'être une pseudo-science suppose qu'elle prétendrait être une science. Or elle ne le prétend pas. La véritable pseudo-science, c'est ce qui s'appelle aujourd'hui psychologie — et la souffrance qu'elle produit est partout visible.",
-  "author": {
-    "@type": "Person",
-    "name": "Léo Gayrard",
-    "url": "https://troisiemechemin.fr"
-  },
-  "datePublished": "2026-05-04",
-  "image": "https://troisiemechemin.fr/articles/psychology-pseudoscience.jpeg",
-  "publisher": {
-    "@type": "Organization",
-    "name": "Troisième Chemin",
-    "url": "https://troisiemechemin.fr"
-  },
-  "mainEntityOfPage": {
-    "@type": "WebPage",
-    "@id": "https://troisiemechemin.fr/articles/psychologie-pseudo-science-psychanalyse"
-  }
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "La psychanalyse est-elle une science ?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Non, et elle ne l'a jamais prétendu. Lacan était explicite sur ce point : la psychanalyse opère sur le sujet de la science mais n'est pas elle-même une science. Elle s'adresse à ce que la science forclôt — la dimension symbolique, l'inconscient, le désir. L'accusation de « pseudo-science » suppose une prétention que la psychanalyse n'a jamais eue."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Pourquoi qualifier la psychologie moderne de pseudo-scientifique ?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Parce qu'elle imite la forme de la science — la mesure, la classification, les statistiques — tout en opérant sur un domaine que la science, par construction, ne peut pas atteindre : le sujet parlant. Elle produit des descriptions à la place d'explications, des classifications à la place d'interprétations, et confond le symptôme avec ce qu'il désigne."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "En quoi cela importe-t-il pour les patients ?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Cela importe parce que le modèle psychologique dominant produit une forme spécifique de souffrance : on apprend aux patients à « vivre avec » leurs symptômes, on les classe dans des catégories qui n'expliquent rien, et on les médicalise pour faire taire ce qui cherchait à parler. La clinique de la parole est progressivement remplacée par la clinique de la description."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Mais Freud ne voulait-il pas faire de la psychanalyse une science ?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Si, Freud a explicitement affirmé que la psychanalyse était une science naturelle, du Projet de 1895 jusqu'à l'Abrégé de 1938. Il s'est trompé sur la nature de sa propre découverte — et ce qu'il a découvert dépasse ce qu'il croyait découvrir. Christophe Colomb cherchait les Indes et a trouvé un continent. On ne dit pas que Colomb a échoué. C'est Lacan qui a achevé la cartographie, en nommant ce que Freud avait trouvé : l'ordre symbolique, l'inconscient structuré comme un langage."
-      }
-    }
-  ]
-}
-</script>

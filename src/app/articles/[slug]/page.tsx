@@ -77,6 +77,34 @@ function isForTherapists(category: string): boolean {
   )
 }
 
+// Sélectionne 3 articles à proposer en fin de lecture
+// Stratégie : 2 même catégorie (plus récents) + 1 d'une autre catégorie (le plus récent)
+// Si pas assez d'articles dans la catégorie, complète avec les plus récents toutes catégories
+function getRelatedPosts(currentSlug: string, currentCategory: string) {
+  const all = getAllPosts() as any[]
+  const others = all.filter(p => p.slug !== currentSlug)
+
+  const sameCategory = others
+    .filter(p => p.category === currentCategory)
+    .slice(0, 2)
+
+  const otherCategory = others
+    .filter(p => p.category !== currentCategory && !sameCategory.find(s => s.slug === p.slug))
+    .slice(0, 1)
+
+  let related = [...sameCategory, ...otherCategory]
+
+  // Si on a moins de 3 articles, on complète avec les plus récents quel qu'en soit la catégorie
+  if (related.length < 3) {
+    const fillers = others
+      .filter(p => !related.find(r => r.slug === p.slug))
+      .slice(0, 3 - related.length)
+    related = [...related, ...fillers]
+  }
+
+  return related.slice(0, 3)
+}
+
 export default async function ArticlePage({ params }: PageProps) {
   const { slug } = await params
   const post = getPostBySlug(slug) as any
@@ -86,6 +114,7 @@ export default async function ArticlePage({ params }: PageProps) {
   const articleUrl = `https://troisiemechemin.fr/articles/${slug}`
   const faqs: FAQItem[] = post.faqs || []
   const therapeuteArticle = isForTherapists(post.category || "")
+  const relatedPosts = getRelatedPosts(slug, post.category || "")
 
   return (
     <main className="max-w-7xl mx-auto px-4 sm:px-6 py-10 text-slate-900">
@@ -264,6 +293,48 @@ export default async function ArticlePage({ params }: PageProps) {
             <ShareActions url={articleUrl} title={post.title} />
           </div>
         </div>
+
+        {/* SECTION "À LIRE ENSUITE" — articles suggérés */}
+        {relatedPosts.length > 0 && (
+          <section className="max-w-7xl mx-auto mt-20 mb-16">
+            <div className="text-center mb-10">
+              <h2 className="text-[10px] font-bold uppercase tracking-[0.4em] text-blue-600 mb-3 font-sans">Poursuivre la lecture</h2>
+              <p className="text-3xl md:text-4xl font-serif italic text-slate-900">À lire ensuite</p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {relatedPosts.map((p: any) => (
+                <Link
+                  key={p.slug}
+                  href={`/articles/${p.slug}`}
+                  className="group block bg-white rounded-3xl overflow-hidden shadow-sm border border-slate-100 hover:shadow-md transition-all"
+                >
+                  <div className="aspect-[16/10] overflow-hidden bg-slate-100">
+                    <img
+                      src={p.image}
+                      alt={p.title}
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
+                  </div>
+                  <div className="p-6">
+                    {p.category && (
+                      <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-blue-500 mb-3 font-sans">
+                        {p.category}
+                      </p>
+                    )}
+                    <h3 className="text-xl md:text-2xl font-serif italic text-slate-900 leading-tight mb-3 group-hover:text-blue-600 transition-colors">
+                      {p.title}
+                    </h3>
+                    {p.summary && (
+                      <p className="text-sm text-slate-500 italic font-sans line-clamp-3 leading-relaxed">
+                        {p.summary}
+                      </p>
+                    )}
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
 
         {/* FOOTER CTA — 3 blocs, central adapté selon catégorie */}
         <footer className="max-w-7xl mx-auto mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-20 text-white">

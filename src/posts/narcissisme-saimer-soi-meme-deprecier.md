@@ -91,6 +91,8 @@ Une thérapie sérieuse ne juge pas en ces termes. Elle ne dit pas au patient ce
 
 Cette distinction entre morale et éthique est centrale, et c'est précisément elle que les pratiques contemporaines effacent. Quand on dit au patient "il faut apprendre à vous aimer", on lui prescrit une morale. On lui donne un objectif normatif. On lui dit ce qu'il doit ressentir, au lieu de l'aider à entendre ce qu'il ressent réellement et ce vers quoi cela le porte.
 
+[CTA-APP]
+
 ## La pulsion de mort, et la direction de la cure
 
 Quel est le mouvement clinique réel du narcissisme ? Quelle qu'en soit la forme — amour de soi exalté ou haine de soi corrosive — le sujet narcissique replie sur lui-même son investissement au monde. Au lieu d'investir l'autre, le travail, la création, la rencontre, l'objet aimé, il investit son propre moi. Il se retire du circuit de la liaison.
@@ -111,4 +113,16 @@ Une thérapie qui se respecte ne renforce pas le repli narcissique du patient. E
 
 S'aimer soi-même n'est pas le préalable à l'amour de l'autre. Se déprécier n'est pas l'inverse de s'aimer ; c'en est la face cachée, et la même prison. Et la thérapie, la vraie, ne consiste pas à choisir entre les deux. Elle consiste à sortir de la pièce.
 
-Si ces questions vous travaillent et que vous cherchez un espace où elles puissent être véritablement entendues — c'est-à-dire pas validées, mais accueillies, déplacées, mises au travail — vous pouvez prendre contact via la [page d'accompagnement](/accompagnement).
+## Références
+
+- Freud, S. (1914). *Pour introduire le narcissisme.* In *La vie sexuelle*, PUF.
+- Freud, S. (1920). *Au-delà du principe de plaisir.* Payot.
+- Freud, S. (1921). *Psychologie des foules et analyse du moi.* Payot.
+- Freud, S. (1930). *Le malaise dans la culture.* PUF.
+- Lacan, J. (1949). *Le stade du miroir comme formateur de la fonction du Je.* In *Écrits*, Seuil.
+- Lacan, J. (1959–1960). *Le Séminaire, livre VII : L'éthique de la psychanalyse.* Seuil.
+- Lacan, J. (1969–1970). *Le Séminaire, livre XVII : L'envers de la psychanalyse.* Seuil.
+- Ovide. *Les Métamorphoses,* Livre III, "Narcisse et Écho".
+- Lasch, C. (1979). *La culture du narcissisme.* Climats.
+- Melman, C. (2002). *L'homme sans gravité : jouir à tout prix.* Denoël.
+- Dufour, D.-R. (2003). *L'art de réduire les têtes : sur la nouvelle servitude de l'homme libéré à l'ère du capitalisme total.* Denoël.

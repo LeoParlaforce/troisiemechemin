@@ -113,6 +113,8 @@ Une thérapie qui se respecte ne renforce pas le repli narcissique du patient. E
 
 S'aimer soi-même n'est pas le préalable à l'amour de l'autre. Se déprécier n'est pas l'inverse de s'aimer ; c'en est la face cachée, et la même prison. Et la thérapie, la vraie, ne consiste pas à choisir entre les deux. Elle consiste à sortir de la pièce.
 
+[CTA-BOUTIQUE]
+
 ## Références
 
 - Freud, S. (1914). *Pour introduire le narcissisme.* In *La vie sexuelle*, PUF.

@@ -6,7 +6,13 @@ import { Metadata } from "next"
 export const metadata: Metadata = {
   title: "Boutique | Protocoles Cliniques & Guides Psychologiques | Troisième Chemin",
   description: "Parcourez notre collection de protocoles cliniques et de guides de restructuration psychologique basés sur la recherche.",
-  alternates: { canonical: "https://troisiemechemin.fr/boutique" }
+  alternates: { canonical: "https://troisiemechemin.fr/boutique" },
+  openGraph: {
+    title: "Boutique | Protocoles Cliniques & Guides Psychologiques | Troisième Chemin",
+    description: "Protocoles cliniques et guides de psychologie rédigés par un psychologue diplômé d'État.",
+    url: "https://troisiemechemin.fr/boutique",
+    images: [{ url: "https://troisiemechemin.fr/guide.jpg", width: 1200, height: 630 }],
+  }
 }
 
 export default function Boutique() {

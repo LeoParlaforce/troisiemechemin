@@ -1,4 +1,5 @@
 import Link from "next/link"
+import Image from "next/image"
 import { getAllPosts } from "@/lib/posts"
 import { Metadata } from "next"
 
@@ -59,7 +60,7 @@ export default function ArticlesPage() {
           <Link key={post.slug} href={`/articles/${post.slug}`} className="group block">
             <article className="flex flex-col gap-4">
               <div className="relative aspect-video w-full overflow-hidden rounded-2xl border border-slate-200 shadow-sm bg-white/90 backdrop-blur-sm">
-                <img src={post.image} alt={post.title} className="w-full h-full object-cover sepia-[0.1] transition duration-700 group-hover:scale-105" />
+                <Image src={post.image} alt={post.title} fill className="object-cover sepia-[0.1] transition duration-700 group-hover:scale-105" sizes="(min-width:768px) 50vw, 100vw" />
               </div>
               <div className="space-y-3 px-1">
                 <div className="flex items-center gap-3 text-[10px] font-sans uppercase tracking-[0.2em] text-blue-600 font-bold">

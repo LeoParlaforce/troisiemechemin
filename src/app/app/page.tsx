@@ -3,11 +3,11 @@ import { Metadata } from "next"
 
 export const metadata: Metadata = {
   title: "L'app — Troisième Chemin",
-  description: "Chat privé chiffré avec un psychologue clinicien. Pour la thérapie ou pour la supervision.",
+  description: "Une messagerie individuelle avec un psychologue clinicien. Pour la thérapie ou pour la supervision.",
   alternates: { canonical: "https://troisiemechemin.fr/app" },
   openGraph: {
     title: "L'app — Troisième Chemin",
-    description: "Chat privé chiffré avec un psychologue clinicien.",
+    description: "Une messagerie individuelle avec un psychologue clinicien.",
     url: "https://troisiemechemin.fr/app",
     type: "website",
   },
@@ -20,7 +20,7 @@ export default function AppPage() {
       {/* HERO */}
       <section className="max-w-4xl mx-auto px-6 pt-16 md:pt-24 pb-12 text-center">
         <div className="mb-8 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-100/60 border border-blue-200 text-blue-700 text-xs font-sans font-bold uppercase tracking-widest">
-          <span className="text-blue-500">✦</span> Chat chiffré · Humain · Sans IA
+          <span className="text-blue-500">✦</span> Messagerie individuelle · Humain · Sans IA
         </div>
 
         <h1 className="text-5xl md:text-7xl font-bold italic tracking-tighter leading-none mb-8">
@@ -48,13 +48,13 @@ export default function AppPage() {
           >
             <div className="space-y-6">
               <div className="text-xs font-sans font-bold uppercase tracking-widest text-blue-500">
-                01 — Patient
+                Patient
               </div>
               <h2 className="text-3xl md:text-4xl font-bold italic tracking-tight leading-tight text-slate-900 group-hover:text-blue-600 transition-colors">
                 Je cherche une thérapie.
               </h2>
               <p className="text-slate-600 italic leading-relaxed">
-                Je veux parler de ce que je traverse — anxiété, relations, perte, sens, identité, blocages. À mon rythme, en écrit, sans rendez-vous figé.
+                Je veux mettre au travail ce qui me travaille, à mon rythme, par écrit, sans rendez-vous figé.
               </p>
               <div className="inline-flex items-center gap-2 text-blue-600 font-bold text-sm font-sans group-hover:gap-3 transition-all pt-2">
                 Découvrir la thérapie
@@ -70,13 +70,13 @@ export default function AppPage() {
           >
             <div className="space-y-6">
               <div className="text-xs font-sans font-bold uppercase tracking-widest text-blue-500">
-                02 — Thérapeute
+                Thérapeute
               </div>
               <h2 className="text-3xl md:text-4xl font-bold italic tracking-tight leading-tight text-slate-900 group-hover:text-blue-600 transition-colors">
                 Je cherche une supervision.
               </h2>
               <p className="text-slate-600 italic leading-relaxed">
-                Je suis psychologue, psychanalyste, ou en formation. Je veux un cadre de supervision clinique régulier pour penser ma pratique.
+                Je suis thérapeute et je cherche à ne plus pratiquer seul·e. Mes patients me mobilisent et je veux pouvoir travailler ce que ça fait en moi sans avoir à polluer leur thérapie.
               </p>
               <div className="inline-flex items-center gap-2 text-blue-600 font-bold text-sm font-sans group-hover:gap-3 transition-all pt-2">
                 Découvrir la supervision

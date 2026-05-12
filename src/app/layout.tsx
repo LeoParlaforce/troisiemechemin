@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     default: "Troisième Chemin — Guides de psychologie",
     template: "%s | Troisième Chemin"
   },
-  description: "Guides de psychologie clinique et ressources pratiques. Rédigés par un psychologue diplômé d'État.",
+  description: "Psychologie clinique, thérapie et supervision par messagerie individuelle. Par un psychologue clinicien diplômé d'État.",
   alternates: {
     canonical: "https://troisiemechemin.fr",
     languages: {
@@ -151,21 +151,26 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               troisiemechemin.fr
             </Link>
 
-            {/* FIX : "Thérapeutes" retiré du menu — accessible via homepage et footer */}
             <nav aria-label="Navigation principale" className="flex items-center gap-0.5 md:gap-2">
               {[
-                { href: "/", label: "Accueil" },
-                { href: "/boutique", label: "Boutique" },
-                { href: "/articles", label: "Articles" },
+                { href: "/", label: "Accueil", mobileHidden: true },
+                { href: "/boutique", label: "Boutique", mobileHidden: false },
+                { href: "/articles", label: "Articles", mobileHidden: false },
               ].map((l) => (
                 <Link
                   key={l.href}
                   href={l.href}
-                  className="px-1.5 md:px-3 py-1.5 rounded-md opacity-90 transition hover:opacity-100 hover:text-blue-700 hover:bg-blue-50 focus-visible:outline-none focus-visible:ring-2 text-[13px] md:text-base text-slate-900 font-medium whitespace-nowrap"
+                  className={`${l.mobileHidden ? "hidden md:inline-flex" : ""} px-1.5 md:px-3 py-1.5 rounded-md opacity-90 transition hover:opacity-100 hover:text-blue-700 hover:bg-blue-50 focus-visible:outline-none focus-visible:ring-2 text-[13px] md:text-base text-slate-900 font-medium whitespace-nowrap`}
                 >
                   {l.label}
                 </Link>
               ))}
+              <Link
+                href="/app"
+                className="ml-1 px-3 md:px-4 py-1.5 rounded-full bg-blue-600 text-white text-[13px] md:text-sm font-bold font-sans hover:bg-blue-700 transition whitespace-nowrap"
+              >
+                L'app
+              </Link>
             </nav>
           </div>
         </header>

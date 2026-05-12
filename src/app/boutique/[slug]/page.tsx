@@ -11,13 +11,12 @@ export async function generateMetadata({ params }: PageProps) {
   const p = getProductBySlug(slug)
   if (!p) return {}
 
-  // Détermination de l'image pour les métadonnées
   let metaImage = p.image;
   if (slug === "introduction-aux-guides") metaImage = "/introduction.jpg";
   if (slug === "hauts-potentiels" || slug === "haut-potentiel-intellectuel") metaImage = "/hpi.jpg";
 
-  return { 
-    title: `${p.title} | Protocole | Troisième Chemin`, 
+  return {
+    title: `${p.title} | Protocole | Troisième Chemin`,
     description: p.summary,
     openGraph: { images: [{ url: metaImage }] }
   }
@@ -30,7 +29,6 @@ export default async function EbookPage({ params }: PageProps) {
 
   const productFaqs = p.faq || []
 
-  // Logique d'image identique à la page boutique pour la cohérence
   let productImage = p.image;
   if (slug === "introduction-aux-guides") productImage = "/introduction.jpg";
   if (slug === "hauts-potentiels" || slug === "haut-potentiel-intellectuel") productImage = "/hpi.jpg";
@@ -84,12 +82,12 @@ export default async function EbookPage({ params }: PageProps) {
 
         <div className="mt-6 grid gap-12 md:grid-cols-2 md:items-stretch">
           <div className="relative aspect-3/4 md:min-h-125 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-2xl flex">
-            <Image 
-              src={productImage} 
-              alt={p.title} 
-              fill 
-              className="object-cover sepia-[0.1]" 
-              priority 
+            <Image
+              src={productImage}
+              alt={p.title}
+              fill
+              className="object-cover sepia-[0.1]"
+              priority
               sizes="(min-width: 1024px) 50vw, 100vw"
             />
           </div>
@@ -115,14 +113,12 @@ export default async function EbookPage({ params }: PageProps) {
               <div className="w-full sm:flex-1">
                 <BuyButton slug={p.slug} priceEUR={p.priceEUR} priceUSD={p.priceUSD} image={productImage} />
               </div>
-              <a
-                href="https://chat.troisiemechemin.fr"
-                target="_blank"
-                rel="noopener noreferrer"
+              <Link
+                href="/app"
                 className="w-full sm:w-auto flex items-center justify-center px-8 h-13 rounded-md border-2 border-slate-900 text-slate-900 font-bold uppercase tracking-tight hover:bg-slate-900 hover:text-white transition-all text-sm font-sans"
               >
                 Accéder à l'App
-              </a>
+              </Link>
             </div>
           </div>
         </div>

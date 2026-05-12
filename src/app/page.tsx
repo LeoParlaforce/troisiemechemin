@@ -85,10 +85,8 @@ export default function HomePage() {
           </div>
         </Link>
 
-        <a
-          href="https://chat.troisiemechemin.fr"
-          target="_blank"
-          rel="noopener noreferrer"
+        <Link
+          href="/app"
           className="group block border border-blue-200 rounded-2xl overflow-hidden hover:border-blue-400 transition bg-blue-50/80 shadow-sm backdrop-blur-md"
         >
           <div className="h-40 overflow-hidden border-b border-blue-100">
@@ -97,13 +95,13 @@ export default function HomePage() {
           <div className="p-6">
             <h2 className="text-xl font-bold mb-1 text-blue-900">Troisième chemin</h2>
             <p className="text-blue-800 text-[10px] font-bold mb-3 uppercase tracking-widest font-sans flex items-center gap-1">
-              <span className="text-blue-500">✦</span> Application Humaine
+              <span className="text-blue-500">✦</span> Chat chiffré · Humain
             </p>
             <p className="text-slate-700 text-sm md:text-xs leading-relaxed font-sans">
               Un espace dédié à la thérapie quotidienne et à la véritable connexion humaine.
             </p>
           </div>
-        </a>
+        </Link>
       </section>
 
       {/* SÉPARATEUR */}
@@ -112,7 +110,7 @@ export default function HomePage() {
       {/* BLOC THÉRAPEUTES */}
       <section className="max-w-5xl mx-auto w-full">
         <Link
-          href="/pour-les-therapeutes"
+          href="/supervision"
           className="group block border border-slate-200 rounded-2xl overflow-hidden hover:border-blue-300 hover:shadow-lg transition-all duration-300 bg-white/80 backdrop-blur-md"
         >
           <div className="flex flex-col md:flex-row items-center gap-0">
@@ -131,10 +129,10 @@ export default function HomePage() {
                 Vous êtes thérapeute ?
               </h2>
               <p className="text-slate-500 italic text-sm leading-relaxed max-w-lg">
-                Troisième Chemin vous offre un canal de séances quotidiennes avec vos patients, une supervision clinique avec un psychologue diplômé, et un moyen de trouver de nouveaux patients. Un abonnement, trois outils.
+                Un cadre de supervision clinique régulier, par chat privé chiffré. Pour penser votre pratique au moment où elle vous occupe — pas un mois après.
               </p>
               <div className="inline-flex items-center gap-2 text-blue-600 font-bold text-sm font-sans group-hover:gap-3 transition-all">
-                Découvrir l'offre praticien
+                Découvrir la supervision
                 <span className="group-hover:translate-x-1 transition-transform">→</span>
               </div>
             </div>

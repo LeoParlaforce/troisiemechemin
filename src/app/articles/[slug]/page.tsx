@@ -68,8 +68,7 @@ const markdownComponents = {
   ),
 }
 
-// Routing intelligent : article pour thérapeutes → /pour-les-therapeutes
-// Reconnaît les deux langues pour compatibilité cross-site
+// Routing intelligent : article pour thérapeutes → /supervision
 function isForTherapists(category: string): boolean {
   return (
     category === "Développement Professionnel" ||
@@ -77,9 +76,6 @@ function isForTherapists(category: string): boolean {
   )
 }
 
-// Sélectionne 3 articles à proposer en fin de lecture
-// Stratégie : 2 même catégorie (plus récents) + 1 d'une autre catégorie (le plus récent)
-// Si pas assez d'articles dans la catégorie, complète avec les plus récents toutes catégories
 function getRelatedPosts(currentSlug: string, currentCategory: string) {
   const all = getAllPosts() as any[]
   const others = all.filter(p => p.slug !== currentSlug)
@@ -94,7 +90,6 @@ function getRelatedPosts(currentSlug: string, currentCategory: string) {
 
   let related = [...sameCategory, ...otherCategory]
 
-  // Si on a moins de 3 articles, on complète avec les plus récents quel qu'en soit la catégorie
   if (related.length < 3) {
     const fillers = others
       .filter(p => !related.find(r => r.slug === p.slug))
@@ -115,10 +110,11 @@ export default async function ArticlePage({ params }: PageProps) {
   const therapeuteArticle = isForTherapists(post.category || "")
   const relatedPosts = getRelatedPosts(slug, post.category || "")
 
-  // Découpage du contenu en segments selon les marqueurs CTA
-  // Format possible : texte [CTA-APP] texte [CTA-BOUTIQUE] texte
   const rawContent = post.content || ""
   const segments = rawContent.split(/(\[CTA-APP\]|\[CTA-BOUTIQUE\])/g)
+
+  // URL cible des CTA-APP selon la catégorie
+  const ctaAppHref = therapeuteArticle ? "/supervision" : "/app"
 
   return (
     <main className="max-w-7xl mx-auto px-4 sm:px-6 py-10 text-slate-900">
@@ -135,7 +131,6 @@ export default async function ArticlePage({ params }: PageProps) {
               "image": `https://troisiemechemin.fr${post.image}`,
               "datePublished": new Date(post.date).toISOString(),
               "dateModified": new Date(post.date).toISOString(),
-              // FIX : @id cross-référence vers l'auteur du layout
               "author": { "@id": "https://troisiemechemin.fr/#author" },
               "publisher": { "@id": "https://troisiemechemin.fr/#organization" },
               "mainEntityOfPage": { "@type": "WebPage", "@id": articleUrl },
@@ -216,17 +211,17 @@ export default async function ArticlePage({ params }: PageProps) {
                 return therapeuteArticle ? (
                   <Link
                     key={`cta-app-${idx}`}
-                    href="/pour-les-therapeutes"
+                    href="/supervision"
                     className="block my-12 group p-px rounded-3xl bg-gradient-to-br from-blue-100 to-transparent shadow-sm hover:shadow-md transition-all no-underline"
                   >
                     <div className="bg-white rounded-[22px] p-4 flex flex-col md:flex-row items-center gap-6 border border-slate-50">
                       <div className="w-full md:w-40 aspect-video md:aspect-square rounded-xl overflow-hidden shrink-0">
-                        <img src="/articles.jpg" alt="Pour les thérapeutes" className="w-full h-full object-cover" />
+                        <img src="/articles.jpg" alt="Supervision" className="w-full h-full object-cover" />
                       </div>
                       <div className="flex-1 text-center md:text-left">
                         <h3 className="text-[10px] font-bold uppercase tracking-[0.3em] text-blue-500 mb-2 font-sans">Pour les Praticiens</h3>
-                        <p className="text-xl md:text-2xl italic text-slate-800 leading-tight">Troisième Chemin — Pour les Thérapeutes</p>
-                        <p className="text-sm text-slate-500 italic mt-2 font-sans">Séances quotidiennes, supervision, acquisition de patients.</p>
+                        <p className="text-xl md:text-2xl italic text-slate-800 leading-tight">Supervision clinique par chat privé</p>
+                        <p className="text-sm text-slate-500 italic mt-2 font-sans">Un cadre régulier pour penser votre pratique.</p>
                       </div>
                       <div className="md:pr-4 pb-2 md:pb-0">
                         <span className="bg-slate-900 text-white px-6 py-3 rounded-full font-bold text-sm group-hover:bg-blue-600 transition-all inline-block font-sans">
@@ -236,34 +231,31 @@ export default async function ArticlePage({ params }: PageProps) {
                     </div>
                   </Link>
                 ) : (
-                  <a
+                  <Link
                     key={`cta-app-${idx}`}
-                    href="https://chat.troisiemechemin.fr"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="block my-12 group p-px rounded-3xl bg-gradient-to-br from-blue-100 to-transparent shadow-sm hover:shadow-md transition-all"
+                    href="/app"
+                    className="block my-12 group p-px rounded-3xl bg-gradient-to-br from-blue-100 to-transparent shadow-sm hover:shadow-md transition-all no-underline"
                   >
                     <div className="bg-white rounded-[22px] p-4 flex flex-col md:flex-row items-center gap-6 border border-slate-50">
                       <div className="w-full md:w-40 aspect-video md:aspect-square rounded-xl overflow-hidden shrink-0">
                         <img src="/humanist-approach.jpg" alt="App" className="w-full h-full object-cover" />
                       </div>
                       <div className="flex-1 text-center md:text-left">
-                        <h3 className="text-[10px] font-bold uppercase tracking-[0.3em] text-blue-500 mb-2 font-sans">Soutien continu</h3>
-                        <p className="text-xl md:text-2xl italic text-slate-800 leading-tight">App Troisième Chemin</p>
-                        <p className="text-sm text-slate-500 italic mt-2 font-sans">Thérapie quotidienne. Humaine, chiffrée, sans IA.</p>
+                        <h3 className="text-[10px] font-bold uppercase tracking-[0.3em] text-blue-500 mb-2 font-sans">Chat chiffré</h3>
+                        <p className="text-xl md:text-2xl italic text-slate-800 leading-tight">Troisième Chemin — l'app</p>
+                        <p className="text-sm text-slate-500 italic mt-2 font-sans">Thérapie ou supervision, par chat privé. Humain, chiffré, sans IA.</p>
                       </div>
                       <div className="md:pr-4 pb-2 md:pb-0">
                         <span className="bg-slate-900 text-white px-6 py-3 rounded-full font-bold text-sm group-hover:bg-blue-600 transition-all inline-block font-sans">
-                          Rejoindre →
+                          Découvrir →
                         </span>
                       </div>
                     </div>
-                  </a>
+                  </Link>
                 )
               }
 
               if (seg === "[CTA-BOUTIQUE]") {
-                // CTA BOUTIQUE — vers les guides cliniques
                 return (
                   <Link
                     key={`cta-boutique-${idx}`}
@@ -289,7 +281,6 @@ export default async function ArticlePage({ params }: PageProps) {
                 )
               }
 
-              // Segment de texte markdown
               if (seg.trim()) {
                 return (
                   <ReactMarkdown key={`md-${idx}`} components={markdownComponents}>
@@ -333,7 +324,7 @@ export default async function ArticlePage({ params }: PageProps) {
           </div>
         </div>
 
-        {/* SECTION "À LIRE ENSUITE" — articles suggérés */}
+        {/* SECTION "À LIRE ENSUITE" */}
         {relatedPosts.length > 0 && (
           <section className="max-w-7xl mx-auto mt-20 mb-16">
             <div className="text-center mb-10">
@@ -387,25 +378,25 @@ export default async function ArticlePage({ params }: PageProps) {
             </div>
           </Link>
 
-          {/* Bloc central : thérapeutes ou app selon catégorie */}
+          {/* Bloc central : supervision ou app selon catégorie */}
           {therapeuteArticle ? (
-            <Link href="/pour-les-therapeutes" className="group h-72 md:h-80 relative rounded-3xl overflow-hidden shadow-lg border border-slate-200 bg-slate-900">
-              <img src="/articles.jpg" alt="Pour les thérapeutes" className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+            <Link href="/supervision" className="group h-72 md:h-80 relative rounded-3xl overflow-hidden shadow-lg border border-slate-200 bg-slate-900">
+              <img src="/articles.jpg" alt="Supervision" className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
               <div className="absolute inset-0 bg-gradient-to-t from-blue-900/95 via-blue-900/40 to-transparent z-10" />
               <div className="absolute inset-0 p-6 md:p-8 flex flex-col justify-end z-20">
                 <h4 className="text-[10px] font-bold uppercase tracking-[0.3em] text-blue-200 mb-2">Praticiens</h4>
-                <p className="text-2xl md:text-3xl font-serif italic leading-tight">Pour les Thérapeutes</p>
+                <p className="text-2xl md:text-3xl font-serif italic leading-tight">Supervision</p>
               </div>
             </Link>
           ) : (
-            <a href="https://chat.troisiemechemin.fr" target="_blank" rel="noopener noreferrer" className="group h-72 md:h-80 relative rounded-3xl overflow-hidden shadow-lg border border-slate-200 bg-slate-900">
+            <Link href="/app" className="group h-72 md:h-80 relative rounded-3xl overflow-hidden shadow-lg border border-slate-200 bg-slate-900">
               <img src="/humanist-approach.jpg" alt="App" className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
               <div className="absolute inset-0 bg-gradient-to-t from-blue-900/95 via-blue-900/40 to-transparent z-10" />
               <div className="absolute inset-0 p-6 md:p-8 flex flex-col justify-end z-20">
-                <h4 className="text-[10px] font-bold uppercase tracking-[0.3em] text-blue-200 mb-2">Communauté</h4>
-                <p className="text-2xl md:text-3xl font-serif italic leading-tight">Rejoindre l'App</p>
+                <h4 className="text-[10px] font-bold uppercase tracking-[0.3em] text-blue-200 mb-2">Chat chiffré</h4>
+                <p className="text-2xl md:text-3xl font-serif italic leading-tight">Rejoindre l'app</p>
               </div>
-            </a>
+            </Link>
           )}
 
           <Link href="/boutique" className="group h-72 md:h-80 relative rounded-3xl overflow-hidden shadow-lg border border-slate-200 bg-slate-900 md:col-span-2 lg:col-span-1">

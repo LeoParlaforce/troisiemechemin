@@ -88,6 +88,45 @@ export default function TherapieClient() {
         </p>
       </section>
 
+      {/* COMMENT ÇA MARCHE */}
+      <section className="max-w-5xl mx-auto px-6 pb-16 md:pb-20">
+        <p className="text-xs font-sans font-bold uppercase tracking-widest text-blue-500 mb-10">
+          Comment ça marche
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {[
+            {
+              n: "01",
+              title: "Une messagerie privée",
+              desc: "Après votre abonnement, vous recevez mon contact Signal — une messagerie privée, sur votre téléphone et votre ordinateur.",
+            },
+            {
+              n: "02",
+              title: "Vous écrivez ce que vous voulez",
+              desc: "Un rêve, une pensée, un doute, une question. Autant de fois que vous voulez, quand vous voulez. Sans format imposé.",
+            },
+            {
+              n: "03",
+              title: "Je réponds sous 24h",
+              desc: "Pas une réponse automatique. Moi — qui lis, qui réfléchis, et qui répond. Chaque fois.",
+            },
+            {
+              n: "04",
+              title: "Et ainsi de suite",
+              desc: "Vous répondez, je réponds. Jour après jour, cet échange continu constitue le suivi.",
+            },
+          ].map((item, i) => (
+            <div key={i} className="border border-slate-200 rounded-2xl p-6 md:p-8 bg-white/70 backdrop-blur-sm flex gap-6">
+              <div className="text-3xl font-bold italic text-slate-200 font-sans shrink-0 leading-none">{item.n}</div>
+              <div>
+                <h3 className="font-bold italic text-slate-900 mb-2 text-lg">{item.title}</h3>
+                <p className="text-slate-500 italic text-sm leading-relaxed">{item.desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* CE QUI CHANGE */}
       <section className="border-y border-slate-200 bg-white/60 backdrop-blur-sm py-16 md:py-20">
         <div className="max-w-5xl mx-auto px-6">

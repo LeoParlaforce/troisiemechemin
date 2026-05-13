@@ -210,7 +210,7 @@ export default async function ArticlePage({ params }: PageProps) {
                   <Link
                     key={`cta-app-${idx}`}
                     href="/supervision"
-                    className="block my-12 group p-px rounded-3xl bg-gradient-to-br from-blue-100 to-transparent shadow-sm hover:shadow-md transition-all no-underline"
+                    className="block my-12 group p-px rounded-3xl bg-linear-to-br from-blue-100 to-transparent shadow-sm hover:shadow-md transition-all no-underline"
                   >
                     <div className="bg-white rounded-[22px] p-4 flex flex-col md:flex-row items-center gap-6 border border-slate-50">
                       <div className="w-full md:w-40 aspect-video md:aspect-square rounded-xl overflow-hidden shrink-0 relative">
@@ -232,7 +232,7 @@ export default async function ArticlePage({ params }: PageProps) {
                   <Link
                     key={`cta-app-${idx}`}
                     href="/app"
-                    className="block my-12 group p-px rounded-3xl bg-gradient-to-br from-blue-100 to-transparent shadow-sm hover:shadow-md transition-all no-underline"
+                    className="block my-12 group p-px rounded-3xl bg-linear-to-br from-blue-100 to-transparent shadow-sm hover:shadow-md transition-all no-underline"
                   >
                     <div className="bg-white rounded-[22px] p-4 flex flex-col md:flex-row items-center gap-6 border border-slate-50">
                       <div className="w-full md:w-40 aspect-video md:aspect-square rounded-xl overflow-hidden shrink-0 relative">
@@ -258,7 +258,7 @@ export default async function ArticlePage({ params }: PageProps) {
                   <Link
                     key={`cta-boutique-${idx}`}
                     href="/boutique"
-                    className="block my-12 group p-px rounded-3xl bg-gradient-to-br from-amber-100 to-transparent shadow-sm hover:shadow-md transition-all no-underline"
+                    className="block my-12 group p-px rounded-3xl bg-linear-to-br from-amber-100 to-transparent shadow-sm hover:shadow-md transition-all no-underline"
                   >
                     <div className="bg-white rounded-[22px] p-4 flex flex-col md:flex-row items-center gap-6 border border-slate-50">
                       <div className="w-full md:w-40 aspect-video md:aspect-square rounded-xl overflow-hidden shrink-0 relative">
@@ -371,7 +371,7 @@ export default async function ArticlePage({ params }: PageProps) {
 
           <Link href="/articles" className="group h-72 md:h-80 relative rounded-3xl overflow-hidden shadow-lg border border-slate-200 bg-slate-900">
             <Image src="/articles.jpg" alt="Articles" fill className="object-cover transition-transform duration-700 group-hover:scale-105" sizes="(min-width:1024px) 33vw, 50vw" />
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-900/95 via-slate-900/40 to-transparent z-10" />
+            <div className="absolute inset-0 bg-linear-to-t from-slate-900/95 via-slate-900/40 to-transparent z-10" />
             <div className="absolute inset-0 p-6 md:p-8 flex flex-col justify-end z-20">
               <h4 className="text-[10px] font-bold uppercase tracking-[0.3em] text-slate-300 mb-2">Bibliothèque</h4>
               <p className="text-2xl md:text-3xl font-serif italic leading-tight">Plus d'articles</p>
@@ -382,7 +382,7 @@ export default async function ArticlePage({ params }: PageProps) {
           {therapeuteArticle ? (
             <Link href="/supervision" className="group h-72 md:h-80 relative rounded-3xl overflow-hidden shadow-lg border border-slate-200 bg-slate-900">
               <Image src="/articles.jpg" alt="Supervision" fill className="object-cover transition-transform duration-700 group-hover:scale-105" sizes="(min-width:1024px) 33vw, 50vw" />
-              <div className="absolute inset-0 bg-gradient-to-t from-blue-900/95 via-blue-900/40 to-transparent z-10" />
+              <div className="absolute inset-0 bg-linear-to-t from-blue-900/95 via-blue-900/40 to-transparent z-10" />
               <div className="absolute inset-0 p-6 md:p-8 flex flex-col justify-end z-20">
                 <h4 className="text-[10px] font-bold uppercase tracking-[0.3em] text-blue-200 mb-2">Praticiens</h4>
                 <p className="text-2xl md:text-3xl font-serif italic leading-tight">Supervision</p>
@@ -391,7 +391,7 @@ export default async function ArticlePage({ params }: PageProps) {
           ) : (
             <Link href="/app" className="group h-72 md:h-80 relative rounded-3xl overflow-hidden shadow-lg border border-slate-200 bg-slate-900">
               <Image src="/humanist-approach.jpg" alt="App" fill className="object-cover transition-transform duration-700 group-hover:scale-105" sizes="(min-width:1024px) 33vw, 50vw" />
-              <div className="absolute inset-0 bg-gradient-to-t from-blue-900/95 via-blue-900/40 to-transparent z-10" />
+              <div className="absolute inset-0 bg-linear-to-t from-blue-900/95 via-blue-900/40 to-transparent z-10" />
               <div className="absolute inset-0 p-6 md:p-8 flex flex-col justify-end z-20">
                 <h4 className="text-[10px] font-bold uppercase tracking-[0.3em] text-blue-200 mb-2">Messagerie individuelle</h4>
                 <p className="text-2xl md:text-3xl font-serif italic leading-tight">Rejoindre l'app</p>
@@ -401,7 +401,7 @@ export default async function ArticlePage({ params }: PageProps) {
 
           <Link href="/boutique" className="group h-72 md:h-80 relative rounded-3xl overflow-hidden shadow-lg border border-slate-200 bg-slate-900 md:col-span-2 lg:col-span-1">
             <Image src="/guide.jpg" alt="Boutique" fill className="object-cover transition-transform duration-700 group-hover:scale-105" sizes="(min-width:1024px) 33vw, 100vw" />
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-900/95 via-slate-900/40 to-transparent z-10" />
+            <div className="absolute inset-0 bg-linear-to-t from-slate-900/95 via-slate-900/40 to-transparent z-10" />
             <div className="absolute inset-0 p-6 md:p-8 flex flex-col justify-end z-20">
               <h4 className="text-[10px] font-bold uppercase tracking-[0.3em] text-slate-300 mb-2">Boutique</h4>
               <p className="text-2xl md:text-3xl font-serif italic leading-tight">Guides cliniques</p>

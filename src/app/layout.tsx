@@ -3,6 +3,7 @@ import type { Metadata } from "next"
 import Link from "next/link"
 import { EB_Garamond } from "next/font/google"
 import Script from "next/script"
+import NewsletterSignup from "@/components/NewsletterSignup"
 
 const garamond = EB_Garamond({
   subsets: ["latin"],
@@ -167,7 +168,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               ))}
               <Link
                 href="/app"
-                className="ml-1 px-3 md:px-4 py-1.5 rounded-full bg-blue-600 text-white text-[13px] md:text-sm font-bold font-sans hover:bg-blue-700 transition whitespace-nowrap"
+                className="ml-1 px-3 md:px-4 py-1.5 rounded-full bg-slate-900 text-white text-[13px] md:text-sm font-semibold font-sans hover:bg-blue-600 transition whitespace-nowrap"
               >
                 L'app
               </Link>
@@ -185,6 +186,20 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* FOOTER */}
         <footer className="relative border-t border-slate-200 bg-white overflow-hidden text-slate-900" role="contentinfo">
           <div className="absolute inset-0 pointer-events-none opacity-40" style={grainBg} aria-hidden="true" />
+
+          {/* Newsletter band */}
+          <div className="relative z-10 mx-auto max-w-7xl px-6 pt-8 pb-6 border-b border-slate-100">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <div>
+                <p className="text-[10px] font-sans font-bold uppercase tracking-[0.35em] text-blue-600 mb-1">Newsletter</p>
+                <p className="text-sm font-serif italic text-slate-600">Un article, de temps en temps.</p>
+              </div>
+              <div className="sm:w-64">
+                <NewsletterSignup variant="minimal" />
+              </div>
+            </div>
+          </div>
+
           <div className="relative z-10 mx-auto max-w-7xl px-6 py-10 flex flex-col md:flex-row md:justify-between items-center gap-8 text-sm text-center md:text-left">
 
             <nav aria-label="Navigation légale">

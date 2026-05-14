@@ -42,6 +42,16 @@ export default function SuccessClient() {
       setTrack(data.track ?? null)
       setEmail(data.email ?? null)
       setSlug(data.slug ?? null)
+
+      // Auto-subscribe to newsletter on purchase
+      if (data.email) {
+        fetch("/api/newsletter", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email: data.email }),
+        }).catch(() => {})
+      }
+
       if (data.email && data.track) {
         setSending(true)
         await fetch("/api/tracks/send-welcome", {

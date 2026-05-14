@@ -4,6 +4,7 @@ import ReactMarkdown from "react-markdown"
 import Link from "next/link"
 import Image from "next/image"
 import ShareActions from "@/components/ShareActions"
+import NewsletterSignup from "@/components/NewsletterSignup"
 
 interface FAQItem { question: string; answer: string; }
 interface PageProps { params: Promise<{ slug: string }> }
@@ -366,8 +367,13 @@ export default async function ArticlePage({ params }: PageProps) {
           </section>
         )}
 
+        {/* Newsletter */}
+        <div className="max-w-7xl mx-auto px-4">
+          <NewsletterSignup variant="full" />
+        </div>
+
         {/* FOOTER CTA — 3 blocs, central adapté selon catégorie */}
-        <footer className="max-w-7xl mx-auto mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-20 text-white">
+        <footer className="max-w-7xl mx-auto mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-20 text-white">
 
           <Link href="/articles" className="group h-72 md:h-80 relative rounded-3xl overflow-hidden shadow-lg border border-slate-200 bg-slate-900">
             <Image src="/articles.jpg" alt="Articles" fill className="object-cover transition-transform duration-700 group-hover:scale-105" sizes="(min-width:1024px) 33vw, 50vw" />

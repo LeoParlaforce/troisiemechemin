@@ -1,0 +1,52 @@
+name: Newsletter — Nouvel article
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "src/posts/**/*.md"
+
+jobs:
+  send-newsletter:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Détecter les nouveaux fichiers .md
+        id: detect
+        run: |
+          NEW_FILES=$(git diff --name-only --diff-filter=A HEAD~1 HEAD | grep '^src/posts/.*\.md$' || true)
+          echo "files<<EOF" >> $GITHUB_OUTPUT
+          echo "$NEW_FILES" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+          if [ -z "$NEW_FILES" ]; then
+            echo "found=false" >> $GITHUB_OUTPUT
+          else
+            echo "found=true" >> $GITHUB_OUTPUT
+            echo "Nouveaux articles détectés :"
+            echo "$NEW_FILES"
+          fi
+
+      - name: Setup Node.js
+        if: steps.detect.outputs.found == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Installer les dépendances
+        if: steps.detect.outputs.found == 'true'
+        run: npm ci
+
+      - name: Envoyer la newsletter
+        if: steps.detect.outputs.found == 'true'
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          RESEND_AUDIENCE_ID: ${{ secrets.RESEND_AUDIENCE_ID }}
+          RESEND_FROM: contact@troisiemechemin.fr
+          NEXT_PUBLIC_SITE_URL: https://troisiemechemin.fr
+          NEW_ARTICLE_FILES: ${{ steps.detect.outputs.files }}
+        run: node scripts/send-newsletter-on-publish.mjs

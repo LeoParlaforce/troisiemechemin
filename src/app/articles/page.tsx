@@ -2,6 +2,7 @@ import Link from "next/link"
 import Image from "next/image"
 import { getAllPosts } from "@/lib/posts"
 import { Metadata } from "next"
+import NewsletterSignup from "@/components/NewsletterSignup"
 
 interface Post { slug: string; title: string; summary: string; date: string; image: string; }
 
@@ -55,7 +56,7 @@ export default function ArticlesPage() {
           Réflexions sur la psychologie, la pratique clinique et l'expérience humaine.
         </p>
       </header>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 mb-8">
         {posts.map((post: Post) => (
           <Link key={post.slug} href={`/articles/${post.slug}`} className="group block">
             <article className="flex flex-col gap-4">
@@ -79,6 +80,8 @@ export default function ArticlesPage() {
           </Link>
         ))}
       </div>
+
+      <NewsletterSignup variant="full" />
     </main>
   )
 }

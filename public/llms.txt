@@ -1,0 +1,49 @@
+# Troisième Chemin
+
+> Plateforme de psychologie clinique fondée par Léo Gayrard, psychologue clinicien. Guides psychologiques (eBooks), articles de fond, et application de thérapie / supervision à distance. Tout le contenu est produit par un être humain — aucune IA.
+
+Troisième Chemin s'adresse à deux publics : les particuliers qui cherchent un soutien psychologique structuré, et les thérapeutes qui souhaitent accéder à une supervision clinique. Le site est en français ; un équivalent anglophone existe sous le domaine thirdpath.cloud.
+
+## Navigation principale
+
+- [Accueil](https://troisiemechemin.fr/): Présentation générale de l'offre (guides, articles, application).
+- [Boutique](https://troisiemechemin.fr/boutique/): Catalogue des 11 guides psychologiques et du pack complet.
+- [Articles](https://troisiemechemin.fr/articles/): Essais cliniques rédigés par Léo Gayrard.
+- [Thérapie](https://troisiemechemin.fr/therapie/): Service de thérapie individuelle par messagerie privée.
+- [Supervision](https://troisiemechemin.fr/supervision/): Supervision clinique pour thérapeutes.
+- [Application](https://troisiemechemin.fr/app/): Point d'entrée vers le service de thérapie / supervision.
+- [À propos](https://troisiemechemin.fr/a-propos/): Présentation du psychologue et de la démarche éditoriale.
+
+## Guides psychologiques (eBooks)
+
+Protocoles cliniques fondés sur des données probantes, vendus à l'unité ou en pack.
+
+- [Dépression](https://troisiemechemin.fr/boutique/depression/)
+- [Anxiété](https://troisiemechemin.fr/boutique/anxiete/)
+- [TDAH](https://troisiemechemin.fr/boutique/tdah/)
+- [Spectre autistique](https://troisiemechemin.fr/boutique/autisme/)
+- [Troubles alimentaires](https://troisiemechemin.fr/boutique/troubles-alimentaires/)
+- [Insomnie](https://troisiemechemin.fr/boutique/insomnie/)
+- [Procrastination](https://troisiemechemin.fr/boutique/procrastination/)
+- [Pack complet](https://troisiemechemin.fr/boutique/pack/)
+
+## Articles
+
+Réflexions cliniques et analyses publiées sur le site.
+
+- [Freud était-il misogyne ?](https://troisiemechemin.fr/articles/freud-etait-il-misogyne/)
+- [L'IA va-t-elle remplacer les thérapeutes ?](https://troisiemechemin.fr/articles/ia-therapie-avenir-therapeutes/)
+- [Narcissisme : s'aimer soi-même sans déprécier les autres](https://troisiemechemin.fr/articles/narcissisme-saimer-soi-meme-deprecier/)
+- [Pourquoi les patients arrêtent-ils la thérapie ?](https://troisiemechemin.fr/articles/pourquoi-patients-arretent-therapie/)
+- [La psychologie est-elle une pseudoscience ?](https://troisiemechemin.fr/articles/psychologie-pseudoscience-psychanalyse/)
+- [SEO local pour psychologues](https://troisiemechemin.fr/articles/seo-local-psychologues/)
+- [Supervision clinique pour thérapeutes](https://troisiemechemin.fr/articles/supervision-clinique-therapeutes/)
+
+## Informations légales
+
+- [Mentions légales](https://troisiemechemin.fr/mentions-legales/)
+- [Charte éditoriale](https://troisiemechemin.fr/charte-editoriale/)
+
+## Stack technique
+
+Next.js 15 · React 19 · TypeScript · Tailwind CSS 4 · Stripe · Resend · Markdown (gray-matter)

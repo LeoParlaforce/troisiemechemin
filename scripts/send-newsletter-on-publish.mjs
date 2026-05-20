@@ -85,12 +85,14 @@ async function sendForFile(filePath) {
 
   if (broadcast.error) {
     console.error(`❌ Erreur création broadcast :`, broadcast.error)
+    process.exitCode = 1
     return
   }
 
   const sent = await resend.broadcasts.send(broadcast.data.id)
   if (sent.error) {
     console.error(`❌ Erreur envoi broadcast :`, sent.error)
+    process.exitCode = 1
     return
   }
 

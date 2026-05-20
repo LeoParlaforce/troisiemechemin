@@ -113,7 +113,7 @@ export default async function ArticlePage({ params }: PageProps) {
   const relatedPosts = getRelatedPosts(slug, post.category || "")
 
   const rawContent = post.content || ""
-  const segments = rawContent.split(/(\[CTA-APP\]|\[CTA-BOUTIQUE\])/g)
+  const segments = rawContent.split(/(\[CTA-APP\]|\[CTA-BOUTIQUE\]|\[CTA-SUPERVISION\])/g)
 
   return (
     <main className="max-w-7xl mx-auto px-4 sm:px-6 py-10 text-slate-900">
@@ -243,6 +243,32 @@ export default async function ArticlePage({ params }: PageProps) {
                         <h3 className="text-[10px] font-bold uppercase tracking-[0.3em] text-blue-500 mb-2 font-sans">Messagerie individuelle</h3>
                         <p className="text-xl md:text-2xl italic text-slate-800 leading-tight">Troisième Chemin — l'app</p>
                         <p className="text-sm text-slate-500 italic mt-2 font-sans">Thérapie ou supervision, par messagerie individuelle. Humain, sans IA.</p>
+                      </div>
+                      <div className="md:pr-4 pb-2 md:pb-0">
+                        <span className="bg-slate-900 text-white px-6 py-3 rounded-full font-bold text-sm group-hover:bg-blue-600 transition-all inline-block font-sans">
+                          Découvrir →
+                        </span>
+                      </div>
+                    </div>
+                  </Link>
+                )
+              }
+
+              if (seg === "[CTA-SUPERVISION]") {
+                return (
+                  <Link
+                    key={`cta-supervision-${idx}`}
+                    href="/supervision"
+                    className="block my-12 group p-px rounded-3xl bg-linear-to-br from-blue-100 to-transparent shadow-sm hover:shadow-md transition-all no-underline"
+                  >
+                    <div className="bg-white rounded-[22px] p-4 flex flex-col md:flex-row items-center gap-6 border border-slate-50">
+                      <div className="w-full md:w-40 aspect-video md:aspect-square rounded-xl overflow-hidden shrink-0 relative">
+                        <Image src="/articles.jpg" alt="Supervision" fill className="object-cover" sizes="(min-width:768px) 160px, 100vw" />
+                      </div>
+                      <div className="flex-1 text-center md:text-left">
+                        <h3 className="text-[10px] font-bold uppercase tracking-[0.3em] text-blue-500 mb-2 font-sans">Pour les Praticiens</h3>
+                        <p className="text-xl md:text-2xl italic text-slate-800 leading-tight">Supervision clinique par chat privé</p>
+                        <p className="text-sm text-slate-500 italic mt-2 font-sans">Un cadre régulier pour penser votre pratique.</p>
                       </div>
                       <div className="md:pr-4 pb-2 md:pb-0">
                         <span className="bg-slate-900 text-white px-6 py-3 rounded-full font-bold text-sm group-hover:bg-blue-600 transition-all inline-block font-sans">
